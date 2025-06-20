@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net"
-	"time"
 
 	"github.com/tom-code/gomat/ccm"
 	"github.com/tom-code/gomat/mattertlv"
@@ -78,7 +77,6 @@ func StartSecureChannel(remote_ip net.IP, remote_port, local_port int) (SecureCh
 }
 
 func (sc *SecureChannel) Receive() (DecodedGeneric, error) {
-	sc.Udp.Udp.SetReadDeadline(time.Now().Add(time.Second * 3))
 	data, err := sc.Udp.receive()
 	if err != nil {
 		return DecodedGeneric{}, err

@@ -349,7 +349,7 @@ func EncodeIMReadRequest(endpoint uint16, cluster uint32, attr uint32) []byte {
 	return buffer.Bytes()
 }
 
-// EncodeIMInvokeRequest encodes Interaction Model Read Request message
+// EncodeIMSubscribeRequest encodes Interaction Model Subscribe Request message
 func EncodeIMSubscribeRequest(endpoint uint16, cluster uint32, event uint32) []byte {
 	var tlv mattertlv.TLVBuffer
 	tlv.WriteAnonStruct()
