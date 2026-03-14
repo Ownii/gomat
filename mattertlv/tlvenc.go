@@ -103,6 +103,25 @@ func (b *TLVBuffer) WriteOctetString(tag byte, data []byte) {
 	b.data.Write(data)
 }
 
+func (b *TLVBuffer) WriteUTF8String(tag byte, data []byte) {
+	var ctrl byte
+	ctrl = 0x1 << 5
+	if len(data) > 0xff {
+		ctrl = ctrl | 0x11
+		b.data.WriteByte(ctrl)
+		b.data.WriteByte(tag)
+		var ln uint16
+		ln = uint16(len(data))
+		binary.Write(&b.data, binary.LittleEndian, ln)
+	} else {
+		ctrl = ctrl | 0x10
+		b.data.WriteByte(ctrl)
+		b.data.WriteByte(tag)
+		b.data.WriteByte(byte(len(data)))
+	}
+	b.data.Write(data)
+}
+
 func (b *TLVBuffer) WriteBool(tag byte, val bool) {
 	var ctrl byte
 	ctrl = 0x1 << 5

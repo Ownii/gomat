@@ -72,7 +72,7 @@ func Discover(iface string) ([]DiscoveredDevice, error) {
 			if entry.AddrV6 != nil {
 				addrs = append(addrs, entry.AddrV6)
 			}
-			if entry.AddrV6 != nil {
+			if entry.AddrV4 != nil {
 				addrs = append(addrs, entry.AddrV4)
 			}
 			dev := DiscoveredDevice{
@@ -132,7 +132,7 @@ func Discover2(iface string, service string, disableipv6 bool) (map[string]Disco
 			if entry.AddrV6 != nil {
 				addrs = append(addrs, entry.AddrV6)
 			}
-			if entry.AddrV6 != nil {
+			if entry.AddrV4 != nil {
 				addrs = append(addrs, entry.AddrV4)
 			}
 			dev := DiscoveredDevice{

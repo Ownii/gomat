@@ -88,7 +88,7 @@ func (sc *SecureChannel) Receive() (DecodedGeneric, error) {
 	proto := decode_buffer.Bytes()
 
 	if len(sc.decrypt_key) > 0 {
-		nonce := make_nonce3(out.MessageHeader.messageCounter, sc.remote_node)
+		nonce := make_nonce3(out.MessageHeader.MessageCounter, sc.remote_node)
 		c, err := aes.NewCipher(sc.decrypt_key)
 		if err != nil {
 			return DecodedGeneric{}, err
@@ -127,7 +127,7 @@ func (sc *SecureChannel) Receive() (DecodedGeneric, error) {
 		}
 	}
 
-	ack := ackGen(out.ProtocolHeader, out.MessageHeader.messageCounter)
+	ack := ackGen(out.ProtocolHeader, out.MessageHeader.MessageCounter)
 	sc.Send(ack)
 
 	if out.ProtocolHeader.ProtocolId == 0 {
@@ -155,7 +155,7 @@ func (sc *SecureChannel) Send(data []byte) error {
 	msg := MessageHeader{
 		sessionId:      uint16(sc.session),
 		securityFlags:  0,
-		messageCounter: sc.Counter,
+		MessageCounter: sc.Counter,
 		sourceNodeId:   []byte{1, 2, 3, 4, 5, 6, 7, 8},
 	}
 	msg.Encode(&buffer)

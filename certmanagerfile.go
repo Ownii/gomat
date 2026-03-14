@@ -22,8 +22,17 @@ import (
 	"log"
 	"math/big"
 	"os"
+	"path/filepath"
 	"time"
 )
+
+var pemDir = "pem"
+
+func init() {
+	if envDir, ok := os.LookupEnv("PEM_DIR"); ok {
+		pemDir = envDir
+	}
+}
 
 func certIdToName(id uint64) string {
 	return fmt.Sprintf("%d", id)
@@ -50,25 +59,25 @@ func (cm *FileCertManager) GetCaCertificate() *x509.Certificate {
 
 // Load initializes CA. It loads required state from files.
 func (cm *FileCertManager) Load() error {
-	_, err := os.Stat("pem/ca-private.pem")
+	_, err := os.Stat(filepath.Join(pemDir, "ca-private.pem"))
 	if err != nil {
 		log.Printf("can't open CA key. continue anyway %s\n", err.Error())
 		return nil
 	}
-	anykey, err := loadPrivKey("pem/ca-private.pem")
+	anykey, err := loadPrivKey(filepath.Join(pemDir, "ca-private.pem"))
 	if err != nil {
 		return err
 	}
 	cm.ca_private_key = anykey.(*ecdsa.PrivateKey)
-	cm.ca_certificate, err = loadCertificate("pem/ca-cert.pem")
+	cm.ca_certificate, err = loadCertificate(filepath.Join(pemDir, "ca-cert.pem"))
 	return err
 }
 
 func (cm *FileCertManager) GetCertificate(id uint64) (*x509.Certificate, error) {
-	return loadCertificate("pem/" + certIdToName(id) + "-cert.pem")
+	return loadCertificate(filepath.Join(pemDir, certIdToName(id)+"-cert.pem"))
 }
 func (cm *FileCertManager) GetPrivkey(id uint64) (*ecdsa.PrivateKey, error) {
-	pk, err := loadPrivKey("pem/" + certIdToName(id) + "-private.pem")
+	pk, err := loadPrivKey(filepath.Join(pemDir, certIdToName(id)+"-private.pem"))
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +86,7 @@ func (cm *FileCertManager) GetPrivkey(id uint64) (*ecdsa.PrivateKey, error) {
 
 func (cm *FileCertManager) CreateUser(node_id uint64) error {
 	id := fmt.Sprintf("%d", node_id)
-	privkey, err := generateAndStoreKeyEcdsa("pem/" + id)
+	privkey, err := generateAndStoreKeyEcdsa(filepath.Join(pemDir, id))
 	if err != nil {
 		return err
 	}
@@ -169,20 +178,20 @@ func (cm *FileCertManager) SignCertificate(user_pubkey *ecdsa.PublicKey, node_id
 	if err != nil {
 		return nil, err
 	}
-	storeCertificate("pem/"+certIdToName(node_id), cert_bytes)
+	storeCertificate(filepath.Join(pemDir, certIdToName(node_id)), cert_bytes)
 	log.Printf("Signed certificate for node 0x%x\n", node_id)
 	return out_parsed, nil
 }
 
 // BootstrapCa initializes CA - creates CA keys and certificate
 func (cm *FileCertManager) BootstrapCa() error {
-	_, err := os.Stat("pem/ca-private.pem")
+	_, err := os.Stat(filepath.Join(pemDir, "ca-private.pem"))
 	if err == nil {
 		log.Printf("CA private key already present - skipping bootstrap\n")
 		return nil
 	}
 
-	_, err = generateAndStoreKeyEcdsa("pem/ca")
+	_, err = generateAndStoreKeyEcdsa(filepath.Join(pemDir, "ca"))
 	if err != nil {
 		return err
 	}
@@ -191,12 +200,12 @@ func (cm *FileCertManager) BootstrapCa() error {
 }
 
 func (cm *FileCertManager) createCaCert() error {
-	pubany, err := loadPublicKey("pem/ca-public.pem")
+	pubany, err := loadPublicKey(filepath.Join(pemDir, "ca-public.pem"))
 	if err != nil {
 		return err
 	}
 	pub := pubany.(*ecdsa.PublicKey)
-	priv_ca, err := loadPrivKey("pem/ca-private.pem")
+	priv_ca, err := loadPrivKey(filepath.Join(pemDir, "ca-private.pem"))
 	if err != nil {
 		return err
 	}
@@ -257,7 +266,7 @@ func (cm *FileCertManager) createCaCert() error {
 	if err != nil {
 		return err
 	}
-	storeCertificate("pem/ca", cert_bytes)
+	storeCertificate(filepath.Join(pemDir, "ca"), cert_bytes)
 	log.Println("CA certificate was created")
 	return nil
 }

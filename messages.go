@@ -30,6 +30,8 @@ const INTERACTION_OPCODE_READ_REQ Opcode = 0x2
 const INTERACTION_OPCODE_SUBSC_REQ Opcode = 0x3
 const INTERACTION_OPCODE_SUBSC_RSP Opcode = 0x4
 const INTERACTION_OPCODE_REPORT_DATA Opcode = 0x5
+const INTERACTION_OPCODE_WRITE_REQ Opcode = 0x6
+const INTERACTION_OPCODE_WRITE_RSP Opcode = 0x7
 const INTERACTION_OPCODE_INVOKE_REQ Opcode = 0x8
 const INTERACTION_OPCODE_INVOKE_RSP Opcode = 0x9
 const INTERACTION_OPCODE_TIMED_REQ Opcode = 0xa
@@ -41,13 +43,13 @@ type MessageHeader struct {
 	flags             byte
 	sessionId         uint16
 	securityFlags     byte
-	messageCounter    uint32
+	MessageCounter    uint32
 	sourceNodeId      []byte
 	destinationNodeId []byte
 }
 
 type ProtocolMessageHeader struct {
-	exchangeFlags byte
+	ExchangeFlags byte
 	Opcode        Opcode
 	ExchangeId    uint16
 	ProtocolId    ProtocolId
@@ -55,12 +57,12 @@ type ProtocolMessageHeader struct {
 }
 
 func (m *ProtocolMessageHeader) Decode(data *bytes.Buffer) {
-	m.exchangeFlags, _ = data.ReadByte()
+	m.ExchangeFlags, _ = data.ReadByte()
 	opcode, _ := data.ReadByte()
 	m.Opcode = Opcode(opcode)
 	binary.Read(data, binary.LittleEndian, &m.ExchangeId)
 	binary.Read(data, binary.LittleEndian, &m.ProtocolId)
-	if (m.exchangeFlags & 0x2) != 0 {
+	if (m.ExchangeFlags & 0x2) != 0 {
 		binary.Read(data, binary.LittleEndian, &m.ackCounter)
 	}
 }
@@ -69,21 +71,21 @@ func (m *MessageHeader) Dump() {
 	fmt.Printf("  flags      : %d\n", m.flags)
 	fmt.Printf("  sessionId  : %d\n", m.sessionId)
 	fmt.Printf("  secFlags   : %d\n", m.securityFlags)
-	fmt.Printf("  msgCounter : %d\n", m.messageCounter)
+	fmt.Printf("  msgCounter : %d\n", m.MessageCounter)
 	fmt.Printf("  srcNode    : %v\n", m.sourceNodeId)
 	fmt.Printf("  dstNode    : %v\n", m.destinationNodeId)
 }
 
 func (m *ProtocolMessageHeader) Dump() {
 	fmt.Printf("  protocol message:\n")
-	fmt.Printf("    exchangeFlags : %d\n", m.exchangeFlags)
+	fmt.Printf("    ExchangeFlags : %d\n", m.ExchangeFlags)
 	fmt.Printf("    opcode        : 0x%x\n", m.Opcode)
 	fmt.Printf("    exchangeId    : %d\n", m.ExchangeId)
 	fmt.Printf("    protocolId    : %d\n", m.ProtocolId)
 	fmt.Printf("    ackCounter    : %d\n", m.ackCounter)
 }
 func (m *ProtocolMessageHeader) Encode(data *bytes.Buffer) {
-	data.WriteByte(m.exchangeFlags)
+	data.WriteByte(m.ExchangeFlags)
 	data.WriteByte(byte(m.Opcode))
 	binary.Write(data, binary.LittleEndian, uint16(m.ExchangeId))
 	binary.Write(data, binary.LittleEndian, uint16(m.ProtocolId))
@@ -112,7 +114,7 @@ func (m *MessageHeader) Encode(data *bytes.Buffer) {
 	data.WriteByte(m.calcMessageFlags())
 	binary.Write(data, binary.LittleEndian, uint16(m.sessionId))
 	data.WriteByte(m.securityFlags)
-	binary.Write(data, binary.LittleEndian, uint32(m.messageCounter))
+	binary.Write(data, binary.LittleEndian, uint32(m.MessageCounter))
 	if len(m.sourceNodeId) == 8 {
 		data.Write(m.sourceNodeId)
 	}
@@ -132,7 +134,7 @@ func (m *MessageHeader) Decode(data *bytes.Buffer) error {
 	if err != nil {
 		return err
 	}
-	binary.Read(data, binary.LittleEndian, &m.messageCounter)
+	binary.Read(data, binary.LittleEndian, &m.MessageCounter)
 	if (m.flags & 4) != 0 {
 		m.sourceNodeId = make([]byte, 8)
 		_, err := data.Read(m.sourceNodeId)
@@ -162,7 +164,7 @@ func pBKDFParamRequest(exchange uint16) []byte {
 	var buffer bytes.Buffer
 
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        SEC_CHAN_OPCODE_PBKDF_REQ,
 		ExchangeId:    exchange,
 		ProtocolId:    ProtocolIdSecureChannel,
@@ -185,7 +187,7 @@ func pake1ParamRequest(exchange uint16, key []byte) []byte {
 	var buffer bytes.Buffer
 
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        SEC_CHAN_OPCODE_PAKE1,
 		ExchangeId:    exchange,
 		ProtocolId:    ProtocolIdSecureChannel,
@@ -203,7 +205,7 @@ func pake1ParamRequest(exchange uint16, key []byte) []byte {
 func pake3ParamRequest(exchange uint16, key []byte) []byte {
 	var buffer bytes.Buffer
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        SEC_CHAN_OPCODE_PAKE3,
 		ExchangeId:    exchange,
 		ProtocolId:    ProtocolIdSecureChannel,
@@ -222,11 +224,11 @@ func ackGen(p ProtocolMessageHeader, counter uint32) []byte {
 	var buffer bytes.Buffer
 
 	var eflags byte = exchangeFlagsAcknowledge
-	if (p.exchangeFlags & exchangeFlagsInitiator) == 0 {
+	if (p.ExchangeFlags & exchangeFlagsInitiator) == 0 {
 		eflags |= exchangeFlagsInitiator
 	}
 	prot := ProtocolMessageHeader{
-		exchangeFlags: eflags,
+		ExchangeFlags: eflags,
 		Opcode:        SEC_CHAN_OPCODE_ACK,
 		ExchangeId:    p.ExchangeId,
 		ProtocolId:    ProtocolIdSecureChannel,
@@ -309,7 +311,7 @@ func EncodeIMInvokeRequest(endpoint uint16, cluster uint32, command uint32, payl
 
 	var buffer bytes.Buffer
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        INTERACTION_OPCODE_INVOKE_REQ,
 		ExchangeId:    exchange,
 		ProtocolId:    ProtocolIdInteraction,
@@ -338,7 +340,7 @@ func EncodeIMReadRequest(endpoint uint16, cluster uint32, attr uint32) []byte {
 	var buffer bytes.Buffer
 
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        INTERACTION_OPCODE_READ_REQ,
 		ExchangeId:    0,
 		ProtocolId:    ProtocolIdInteraction,
@@ -376,7 +378,7 @@ func EncodeIMSubscribeRequest(endpoint uint16, cluster uint32, event uint32) []b
 
 	var buffer bytes.Buffer
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        INTERACTION_OPCODE_SUBSC_REQ,
 		ExchangeId:    0,
 		ProtocolId:    ProtocolIdInteraction,
@@ -398,7 +400,7 @@ func EncodeIMTimedRequest(exchange uint16, timeout uint16) []byte {
 
 	var buffer bytes.Buffer
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 5,
+		ExchangeFlags: 5,
 		Opcode:        INTERACTION_OPCODE_TIMED_REQ,
 		ExchangeId:    exchange,
 		ProtocolId:    ProtocolIdInteraction,
@@ -419,7 +421,7 @@ func EncodeIMStatusResponse(exchange_id uint16, iflag byte) []byte {
 
 	var buffer bytes.Buffer
 	prot := ProtocolMessageHeader{
-		exchangeFlags: 4 | iflag,
+		ExchangeFlags: 4 | iflag,
 		Opcode:        INTERACTION_OPCODE_STATUS_RSP,
 		ExchangeId:    exchange_id,
 		ProtocolId:    ProtocolIdInteraction,
