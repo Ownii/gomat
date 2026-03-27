@@ -192,7 +192,10 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 	if len(nocsr) == 0 {
 		return fmt.Errorf("nocsr not received")
 	}
-	tlv2 := mattertlv.Decode(nocsr)
+	tlv2, err := mattertlv.Decode(nocsr)
+	if err != nil {
+		return fmt.Errorf("TLV decode CSR: %w", err)
+	}
 	csr := tlv2.GetOctetStringRec([]int{1})
 	csrp, err := x509.ParseCertificateRequest(csr)
 	if err != nil {

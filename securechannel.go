@@ -139,7 +139,11 @@ func (sc *SecureChannel) Receive() (DecodedGeneric, error) {
 		}
 	}
 	if len(out.Payload) > 0 {
-		out.Tlv = mattertlv.Decode(out.Payload)
+		tlv, err := mattertlv.Decode(out.Payload)
+		if err != nil {
+			return DecodedGeneric{}, fmt.Errorf("TLV decode: %w", err)
+		}
+		out.Tlv = tlv
 	}
 	return out, nil
 }

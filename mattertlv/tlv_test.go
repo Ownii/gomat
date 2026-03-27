@@ -17,7 +17,10 @@ func TestBasicEmptyAnonStruct(t *testing.T) {
 		t.Fatalf("incorrect %s", hex.EncodeToString(encoded))
 	}
 
-	decoded := Decode(encoded)
+	decoded, err := Decode(encoded)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if len(decoded.GetChild()) != 0 {
 		t.Fatalf("empty struct test failed")
 	}
@@ -39,7 +42,10 @@ func TestBasic(t *testing.T) {
 
 	encoded := encoder.Bytes()
 
-	decoded := Decode(encoded)
+	decoded, err := Decode(encoded)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 	if len(decoded.GetChild()) != 8 {
 		t.Fatalf("empty struct test failed")
 	}
@@ -93,7 +99,10 @@ func TestRec(t *testing.T) {
 		t.Fatal("invalid encode")
 	}
 
-	decoded := Decode(encoded)
+	decoded, decErr := Decode(encoded)
+	if decErr != nil {
+		t.Fatalf("unexpected error: %v", decErr)
+	}
 
 	i, err := decoded.GetIntRec([]int{2, 0, 3})
 	if err != nil {
@@ -205,7 +214,10 @@ func TestSignedIntDecoding(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			decoded := Decode(tc.raw)
+			decoded, err := Decode(tc.raw)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
 			item := decoded.GetItemWithTag(tc.tag)
 			if item == nil {
 				t.Fatalf("tag %d not found", tc.tag)
@@ -215,5 +227,40 @@ func TestSignedIntDecoding(t *testing.T) {
 				t.Fatalf("expected %d, got %d", tc.val, got)
 			}
 		})
+	}
+}
+
+func TestDecodeReturnsErrorOnUnknownType(t *testing.T) {
+	tests := []struct {
+		name string
+		raw  []byte
+	}{
+		// Type 0xa (float, unimplemented) inside an anonymous struct
+		{"type 0xa", []byte{0x15, 0x0a, 0x18}},
+		// Type 0xb (double, unimplemented) inside an anonymous struct
+		{"type 0xb", []byte{0x15, 0x0b, 0x18}},
+		// Completely unknown type 0x1f inside an anonymous struct
+		{"type 0x1f", []byte{0x15, 0x1f, 0x18}},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			_, err := Decode(tc.raw)
+			if err == nil {
+				t.Fatalf("expected error for %s, got nil", tc.name)
+			}
+		})
+	}
+}
+
+func TestDecodeValidDataNoError(t *testing.T) {
+	// A valid struct with a uint8 should decode without error
+	raw := []byte{0x15, 0x24, 0x01, 0x42, 0x18} // struct { tag=1, uint8=0x42 }
+	item, err := Decode(raw)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if item.GetItemWithTag(1).GetInt() != 0x42 {
+		t.Fatalf("expected 0x42, got %d", item.GetItemWithTag(1).GetInt())
 	}
 }

@@ -191,7 +191,7 @@ func readTag(tagctrl byte, item *TlvItem, buf *bytes.Buffer) {
 	}
 }
 
-func decode(buf *bytes.Buffer, container *TlvItem) {
+func decode(buf *bytes.Buffer, container *TlvItem) error {
 	for buf.Len() > 0 {
 		current := TlvItem{}
 		fb, _ := buf.ReadByte()
@@ -252,9 +252,9 @@ func decode(buf *bytes.Buffer, container *TlvItem) {
 			readTag(tagctrl, &current, buf)
 			current.valueBool = true
 		case 0xa:
-			panic("")
+			return fmt.Errorf("unsupported TLV type 0x%x (float)", tp)
 		case 0xb:
-			panic("")
+			return fmt.Errorf("unsupported TLV type 0x%x (double)", tp)
 		case 0xc:
 			current.Type = TypeUTF8String
 			readTag(tagctrl, &current, buf)
@@ -281,30 +281,42 @@ func decode(buf *bytes.Buffer, container *TlvItem) {
 		case 0x15:
 			current.Type = TypeList
 			readTag(tagctrl, &current, buf)
-			decode(buf, &current)
+			if err := decode(buf, &current); err != nil {
+				return err
+			}
 		case 0x16:
 			current.Type = TypeList
 			readTag(tagctrl, &current, buf)
-			decode(buf, &current)
+			if err := decode(buf, &current); err != nil {
+				return err
+			}
 		case 0x17:
 			current.Type = TypeList
 			readTag(tagctrl, &current, buf)
-			decode(buf, &current)
+			if err := decode(buf, &current); err != nil {
+				return err
+			}
 		case 0x18:
-			return
+			return nil
 		default:
-			panic(fmt.Sprintf("unknown type %x", tp))
+			return fmt.Errorf("unknown TLV type 0x%x", tp)
 		}
 		container.valueList = append(container.valueList, current)
 	}
+	return nil
 }
 
 // Decode decodes binary TLV into structure represented by TlvItem.
-func Decode(in []byte) TlvItem {
+func Decode(in []byte) (TlvItem, error) {
 	buf := bytes.NewBuffer(in)
 	root := &TlvItem{
 		Type: TypeList,
 	}
-	decode(buf, root)
-	return root.valueList[0]
+	if err := decode(buf, root); err != nil {
+		return TlvItem{}, err
+	}
+	if len(root.valueList) == 0 {
+		return TlvItem{}, fmt.Errorf("empty TLV input")
+	}
+	return root.valueList[0], nil
 }
