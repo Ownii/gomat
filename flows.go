@@ -7,7 +7,6 @@ import (
 	"crypto/x509"
 	"fmt"
 	"log"
-	randm "math/rand"
 	"net"
 
 	"github.com/tom-code/gomat/mattertlv"
@@ -16,11 +15,11 @@ import (
 // Spake2pExchange establishes secure session using PASE (Passcode-Authenticated Session Establishment).
 // This uses SPAKE2+ protocol
 func Spake2pExchange(pin int, udp *udpChannel) (SecureChannel, error) {
-	exchange := uint16(randm.Intn(0xffff))
+	exchange := randomUint16()
 	secure_channel := SecureChannel{
 		Udp:     udp,
 		session: 0,
-		Counter: uint32(randm.Intn(0xffffffff)),
+		Counter: randomUint32(),
 	}
 
 	pbkdf_request := pBKDFParamRequest(exchange)
@@ -100,7 +99,7 @@ func SigmaExchange(fabric *Fabric, controller_id uint64, device_id uint64, secur
 	controller_privkey, _ := ecdh.P256().GenerateKey(rand.Reader)
 	sigma_context := sigmaContext{
 		session_privkey: controller_privkey,
-		exchange:        uint16(randm.Intn(0xffff)),
+		exchange:        randomUint16(),
 	}
 	sigma_context.genSigma1(fabric, device_id)
 	sigma1 := genSigma1Req2(sigma_context.sigma1payload, sigma_context.exchange)

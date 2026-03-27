@@ -17,6 +17,18 @@ func CreateRandomBytes(n int) []byte {
 	return out
 }
 
+func randomUint16() uint16 {
+	var b [2]byte
+	rand.Read(b[:])
+	return binary.LittleEndian.Uint16(b[:])
+}
+
+func randomUint32() uint32 {
+	var b [4]byte
+	rand.Read(b[:])
+	return binary.LittleEndian.Uint32(b[:])
+}
+
 func id_to_bytes(id uint64) []byte {
 	var b bytes.Buffer
 	binary.Write(&b, binary.LittleEndian, id)

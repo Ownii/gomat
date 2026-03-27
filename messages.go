@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"fmt"
-	randm "math/rand"
 
 	"github.com/tom-code/gomat/mattertlv"
 )
@@ -276,7 +275,7 @@ func EncodeStatusReport(code StatusReportElements) []byte {
 	buffer.WriteByte(5)                                // flags
 	buffer.WriteByte(byte(SEC_CHAN_OPCODE_STATUS_REP)) // opcode
 	var exchange_id uint16
-	exchange_id = uint16(randm.Intn(0xffff))
+	exchange_id = randomUint16()
 	binary.Write(&buffer, binary.LittleEndian, exchange_id)
 	var protocol_id uint16 = uint16(ProtocolIdSecureChannel)
 	binary.Write(&buffer, binary.LittleEndian, protocol_id)
