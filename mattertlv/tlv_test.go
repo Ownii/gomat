@@ -124,3 +124,96 @@ func TestRec(t *testing.T) {
 		t.Fatal("incorrect value")
 	}
 }
+
+func TestSignedIntDecoding(t *testing.T) {
+	// Matter TLV element types for signed integers:
+	//   type 0 = Signed Int, 1-byte
+	//   type 1 = Signed Int, 2-byte
+	//   type 2 = Signed Int, 4-byte
+	//   type 3 = Signed Int, 8-byte
+	// Each test wraps a tagged signed int inside an anonymous struct (0x15 ... 0x18).
+	// Tag control 0x20 = context-specific tag (1-byte tag number follows).
+
+	tests := []struct {
+		name string
+		// raw TLV bytes: struct-open + element + struct-end
+		raw []byte
+		tag int
+		val int
+	}{
+		// Type 0: 1-byte signed int, tag=1, value=127 (0x7F)
+		{
+			name: "int8 positive 127",
+			raw:  []byte{0x15, 0x20, 0x01, 0x7F, 0x18},
+			tag:  1, val: 127,
+		},
+		// Type 0: 1-byte signed int, tag=1, value=-1 (0xFF as signed)
+		{
+			name: "int8 negative -1",
+			raw:  []byte{0x15, 0x20, 0x01, 0xFF, 0x18},
+			tag:  1, val: -1,
+		},
+		// Type 0: 1-byte signed int, tag=1, value=-128 (0x80)
+		{
+			name: "int8 negative -128",
+			raw:  []byte{0x15, 0x20, 0x01, 0x80, 0x18},
+			tag:  1, val: -128,
+		},
+		// Type 1: 2-byte signed int, tag=2, value=256 (0x0100 LE)
+		{
+			name: "int16 positive 256",
+			raw:  []byte{0x15, 0x21, 0x02, 0x00, 0x01, 0x18},
+			tag:  2, val: 256,
+		},
+		// Type 1: 2-byte signed int, tag=2, value=-1 (0xFFFF LE)
+		{
+			name: "int16 negative -1",
+			raw:  []byte{0x15, 0x21, 0x02, 0xFF, 0xFF, 0x18},
+			tag:  2, val: -1,
+		},
+		// Type 1: 2-byte signed int, tag=2, value=-256 (0xFF00 LE = 0x00FF in bytes)
+		{
+			name: "int16 negative -256",
+			raw:  []byte{0x15, 0x21, 0x02, 0x00, 0xFF, 0x18},
+			tag:  2, val: -256,
+		},
+		// Type 2: 4-byte signed int, tag=3, value=100000 (0x000186A0 LE)
+		{
+			name: "int32 positive 100000",
+			raw:  []byte{0x15, 0x22, 0x03, 0xA0, 0x86, 0x01, 0x00, 0x18},
+			tag:  3, val: 100000,
+		},
+		// Type 2: 4-byte signed int, tag=3, value=-1 (0xFFFFFFFF LE)
+		{
+			name: "int32 negative -1",
+			raw:  []byte{0x15, 0x22, 0x03, 0xFF, 0xFF, 0xFF, 0xFF, 0x18},
+			tag:  3, val: -1,
+		},
+		// Type 3: 8-byte signed int, tag=4, value=1000000000000 (0x000000E8D4A51000 LE)
+		{
+			name: "int64 positive 1000000000000",
+			raw:  []byte{0x15, 0x23, 0x04, 0x00, 0x10, 0xA5, 0xD4, 0xE8, 0x00, 0x00, 0x00, 0x18},
+			tag:  4, val: 1000000000000,
+		},
+		// Type 3: 8-byte signed int, tag=4, value=-1 (0xFFFFFFFFFFFFFFFF LE)
+		{
+			name: "int64 negative -1",
+			raw:  []byte{0x15, 0x23, 0x04, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x18},
+			tag:  4, val: -1,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			decoded := Decode(tc.raw)
+			item := decoded.GetItemWithTag(tc.tag)
+			if item == nil {
+				t.Fatalf("tag %d not found", tc.tag)
+			}
+			got := item.GetInt()
+			if got != tc.val {
+				t.Fatalf("expected %d, got %d", tc.val, got)
+			}
+		})
+	}
+}
