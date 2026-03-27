@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/tom-code/gomat/ccm"
 	"github.com/tom-code/gomat/mattertlv"
@@ -34,8 +35,11 @@ func (ch *udpChannel) send(data []byte) error {
 	_, err := ch.Udp.WriteTo(data, &ch.Remote_address)
 	return err
 }
+// RecvBufSize is the size of the UDP receive buffer in bytes.
+const RecvBufSize = 64 * 1024
+
 func (ch *udpChannel) receive() ([]byte, error) {
-	buf := make([]byte, 1024*10)
+	buf := make([]byte, RecvBufSize)
 	n, _, errx := ch.Udp.ReadFrom(buf)
 	if errx != nil {
 		return []byte{}, errx
@@ -51,6 +55,9 @@ func make_nonce3(counter uint32, node []byte) []byte {
 	return n.Bytes()
 }
 
+// DefaultReadTimeout is the default timeout for reading from a Matter device.
+const DefaultReadTimeout = 3 * time.Second
+
 type SecureChannel struct {
 	Udp         *udpChannel
 	encrypt_key []byte
@@ -59,6 +66,7 @@ type SecureChannel struct {
 	local_node  []byte
 	Counter     uint32
 	session     int
+	ReadTimeout time.Duration
 }
 
 // StartSecureChannel initializes secure channel for plain unencrypted communication.
@@ -76,6 +84,9 @@ func StartSecureChannel(remote_ip net.IP, remote_port, local_port int) (SecureCh
 }
 
 func (sc *SecureChannel) Receive() (DecodedGeneric, error) {
+	if sc.ReadTimeout > 0 {
+		sc.Udp.Udp.SetReadDeadline(time.Now().Add(sc.ReadTimeout))
+	}
 	data, err := sc.Udp.receive()
 	if err != nil {
 		return DecodedGeneric{}, err

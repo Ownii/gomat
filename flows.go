@@ -17,9 +17,10 @@ import (
 func Spake2pExchange(pin int, udp *udpChannel) (SecureChannel, error) {
 	exchange := randomUint16()
 	secure_channel := SecureChannel{
-		Udp:     udp,
-		session: 0,
-		Counter: randomUint32(),
+		Udp:         udp,
+		session:     0,
+		Counter:     randomUint32(),
+		ReadTimeout: DefaultReadTimeout,
 	}
 
 	pbkdf_request := pBKDFParamRequest(exchange)
@@ -88,6 +89,7 @@ func Spake2pExchange(pin int, udp *udpChannel) (SecureChannel, error) {
 		remote_node: []byte{0, 0, 0, 0, 0, 0, 0, 0},
 		local_node:  []byte{0, 0, 0, 0, 0, 0, 0, 0},
 		session:     int(pbkdf_response_session),
+		ReadTimeout: DefaultReadTimeout,
 	}
 
 	return secure_channel, nil
@@ -168,7 +170,8 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 		return err
 	}
 	secure_channel := SecureChannel{
-		Udp: channel,
+		Udp:         channel,
+		ReadTimeout: DefaultReadTimeout,
 	}
 	defer secure_channel.Close()
 
@@ -180,7 +183,7 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 	// send csr request
 	var tlvb mattertlv.TLVBuffer
 	tlvb.WriteOctetString(0, CreateRandomBytes(32))
-	to_send := EncodeIMInvokeRequest(0, 0x3e, 4, tlvb.Bytes(), false, uint16(randm.Intn(0xffff)))
+	to_send := EncodeIMInvokeRequest(0, 0x3e, 4, tlvb.Bytes(), false, randomUint16())
 	secure_channel.Send(to_send)
 
 	csr_resp, err := secure_channel.Receive()
@@ -205,7 +208,7 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 	//AddTrustedRootCertificate
 	var tlv4 mattertlv.TLVBuffer
 	tlv4.WriteOctetString(0, SerializeCertificateIntoMatter(fabric, fabric.CertificateManager.GetCaCertificate()))
-	to_send = EncodeIMInvokeRequest(0, 0x3e, 0xb, tlv4.Bytes(), false, uint16(randm.Intn(0xffff)))
+	to_send = EncodeIMInvokeRequest(0, 0x3e, 0xb, tlv4.Bytes(), false, randomUint16())
 	secure_channel.Send(to_send)
 
 	resp, err := secure_channel.Receive()
@@ -229,7 +232,7 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 	tlv5.WriteOctetString(2, fabric.ipk) //ipk
 	tlv5.WriteUInt64(3, controller_id)   // admin subject !
 	tlv5.WriteUInt16(4, 101)             // admin vendorid ??
-	to_send = EncodeIMInvokeRequest(0, 0x3e, 0x6, tlv5.Bytes(), false, uint16(randm.Intn(0xffff)))
+	to_send = EncodeIMInvokeRequest(0, 0x3e, 0x6, tlv5.Bytes(), false, randomUint16())
 
 	secure_channel.Send(to_send)
 
@@ -255,7 +258,7 @@ func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device
 	}
 
 	//commissioning complete
-	to_send = EncodeIMInvokeRequest(0, 0x30, 4, []byte{}, false, uint16(randm.Intn(0xffff)))
+	to_send = EncodeIMInvokeRequest(0, 0x30, 4, []byte{}, false, randomUint16())
 	secure_channel.Send(to_send)
 
 	respx, err := secure_channel.Receive()
