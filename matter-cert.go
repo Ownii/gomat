@@ -97,8 +97,14 @@ func SerializeCertificateIntoMatter(fabric *Fabric, in *x509.Certificate) []byte
 	var signature dsaSignature
 	asn1.Unmarshal(in.Signature, &signature)
 
-	r := signature.R.Bytes()
-	s := signature.S.Bytes()
+	// P-256 R and S must each be exactly 32 bytes, zero-padded on the left.
+	// big.Int.Bytes() returns minimal representation without leading zeros.
+	r := make([]byte, 32)
+	s := make([]byte, 32)
+	rBytes := signature.R.Bytes()
+	sBytes := signature.S.Bytes()
+	copy(r[32-len(rBytes):], rBytes)
+	copy(s[32-len(sBytes):], sBytes)
 	s4 := append(r, s...)
 	tlv.WriteOctetString(11, s4)
 	tlv.WriteStructEnd()

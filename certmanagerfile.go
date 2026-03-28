@@ -160,7 +160,7 @@ func (cm *FileCertManager) SignCertificate(user_pubkey *ecdsa.PublicKey, node_id
 		},
 		{
 			Id:       asn1.ObjectIdentifier{2, 5, 29, 37}, // ExtkeyUsage
-			Critical: true,
+			Critical: false,                                // Matter spec: NOC ExtKeyUsage is non-critical
 			Value:    extkeyusa,
 		},
 		{
