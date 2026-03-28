@@ -61,20 +61,16 @@ func TestNOCCertificateIsNotCA(t *testing.T) {
 	}
 
 	// Check raw BasicConstraints extension (OID 2.5.29.19).
+	// When isCa=false (the DEFAULT per RFC 5280), the DER value is an empty
+	// SEQUENCE {0x30, 0x00} — the BOOLEAN is omitted because it's the default.
 	bcOID := asn1.ObjectIdentifier{2, 5, 29, 19}
 	var found bool
 	for _, ext := range noc.Extensions {
 		if ext.Id.Equal(bcOID) {
 			found = true
-			// DER: SEQUENCE { BOOLEAN <isCA> }
-			// 0x30 0x03 0x01 0x01 <value>
-			// value: 0xff = true, 0x00 = false
-			if len(ext.Value) < 5 {
-				t.Fatalf("BasicConstraints extension too short: %x", ext.Value)
-			}
-			isCAByte := ext.Value[4]
-			if isCAByte != 0x00 {
-				t.Errorf("BasicConstraints DER has IsCA byte = 0x%02x, want 0x00 (false)", isCAByte)
+			// Empty SEQUENCE = isCa defaults to false
+			if len(ext.Value) != 2 || ext.Value[0] != 0x30 || ext.Value[1] != 0x00 {
+				t.Errorf("BasicConstraints DER should be empty SEQUENCE {0x30, 0x00}, got %x", ext.Value)
 			}
 		}
 	}
@@ -161,13 +157,13 @@ func TestNOCSerialNumbersAreUnique(t *testing.T) {
 	}
 }
 
-// TestNOCExtKeyUsageIsNotCritical verifies that the ExtKeyUsage extension in
-// the NOC is non-critical, per Matter spec section 6.5.6.1.1. matter.js
-// reconstructs DER from Matter TLV using spec-defined criticality; if the
-// original DER has Critical=true but the spec says false, the reconstructed
-// DER differs by 3 bytes (the BOOLEAN TRUE encoding), breaking signature
+// TestNOCBasicConstraintsOmitsDefaultCA verifies that the BasicConstraints
+// extension in the NOC omits the BOOLEAN FALSE for isCa (since FALSE is the
+// DER DEFAULT value per RFC 5280). matter.js omits the default when
+// reconstructing DER from Matter TLV. If gomat encodes BOOLEAN FALSE
+// explicitly, the reconstructed DER differs by 3 bytes, breaking signature
 // verification.
-func TestNOCExtKeyUsageIsNotCritical(t *testing.T) {
+func TestNOCBasicConstraintsOmitsDefaultCA(t *testing.T) {
 	cm := setupTestCertManager(t)
 
 	userKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
@@ -179,19 +175,20 @@ func TestNOCExtKeyUsageIsNotCritical(t *testing.T) {
 		t.Fatalf("SignCertificate: %v", err)
 	}
 
-	ekuOID := asn1.ObjectIdentifier{2, 5, 29, 37}
-	var found bool
+	bcOID := asn1.ObjectIdentifier{2, 5, 29, 19}
 	for _, ext := range noc.Extensions {
-		if ext.Id.Equal(ekuOID) {
-			found = true
-			if ext.Critical {
-				t.Error("ExtKeyUsage extension must be non-critical per Matter spec, got Critical=true")
+		if ext.Id.Equal(bcOID) {
+			// When isCa=false (the DEFAULT), the value should be an empty
+			// SEQUENCE: {0x30, 0x00}. If it contains BOOLEAN FALSE
+			// ({0x30, 0x03, 0x01, 0x01, 0x00}), the DER won't match
+			// matter.js's reconstruction.
+			if len(ext.Value) != 2 || ext.Value[0] != 0x30 || ext.Value[1] != 0x00 {
+				t.Errorf("BasicConstraints value should be empty SEQUENCE {0x30, 0x00} for isCa=false, got %x", ext.Value)
 			}
+			return
 		}
 	}
-	if !found {
-		t.Error("ExtKeyUsage extension not found in NOC")
-	}
+	t.Error("BasicConstraints extension not found in NOC")
 }
 
 // TestNOCSignatureVerifiesAgainstCA is a sanity check that the NOC's x509
@@ -281,7 +278,7 @@ func TestNOCCriticalExtensions(t *testing.T) {
 	expected := map[string]bool{
 		"2.5.29.19": true,  // BasicConstraints: critical
 		"2.5.29.15": true,  // KeyUsage: critical
-		"2.5.29.37": false, // ExtKeyUsage: NOT critical
+		"2.5.29.37": true,  // ExtKeyUsage: critical (matter.js expects critical)
 		"2.5.29.14": false, // SubjectKeyIdentifier: NOT critical
 		"2.5.29.35": false, // AuthorityKeyIdentifier: NOT critical
 	}
