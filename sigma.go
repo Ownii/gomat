@@ -8,10 +8,25 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/binary"
+	"math/big"
 
 	"github.com/tom-code/gomat/ccm"
 	"github.com/tom-code/gomat/mattertlv"
 )
+
+// padAndConcatRS zero-pads ECDSA R and S to 32 bytes each and concatenates them.
+// P-256 R and S values must each be exactly 32 bytes in the Matter CASE protocol.
+// big.Int.Bytes() returns minimal representation without leading zeros, so a value
+// like 0x00AB...CD would be returned as 31 bytes, breaking the signature.
+func padAndConcatRS(r, s *big.Int) []byte {
+	rPadded := make([]byte, 32)
+	sPadded := make([]byte, 32)
+	rBytes := r.Bytes()
+	sBytes := s.Bytes()
+	copy(rPadded[32-len(rBytes):], rBytes)
+	copy(sPadded[32-len(sBytes):], sBytes)
+	return append(rPadded, sPadded...)
+}
 
 type sigmaContext struct {
 	session_privkey               *ecdh.PrivateKey
@@ -113,12 +128,12 @@ func (sc *sigmaContext) sigma3(fabric *Fabric) ([]byte, error) {
 	if err != nil {
 		return []byte{}, err
 	}
-	tlv_s3tbs_out := append(sr.Bytes(), ss.Bytes()...)
+	s3tbsSig := padAndConcatRS(sr, ss)
 
 	var tlv_s3tbe mattertlv.TLVBuffer
 	tlv_s3tbe.WriteAnonStruct()
 	tlv_s3tbe.WriteOctetString(1, sc.controller_matter_certificate)
-	tlv_s3tbe.WriteOctetString(3, tlv_s3tbs_out)
+	tlv_s3tbe.WriteOctetString(3, s3tbsSig)
 	tlv_s3tbe.WriteStructEnd()
 
 	pub, err := ecdh.P256().NewPublicKey(responder_public)
