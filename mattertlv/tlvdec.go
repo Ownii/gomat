@@ -177,18 +177,23 @@ func (i TlvItem) GetIntRec(tag []int) (uint64, error) {
 	}
 }
 
-func readByte(buf *bytes.Buffer) int {
+func readByte(buf *bytes.Buffer) (int, error) {
 	tmp, err := buf.ReadByte()
 	if err != nil {
-		panic(err)
+		return 0, fmt.Errorf("truncated TLV: %w", err)
 	}
-	return int(tmp)
+	return int(tmp), nil
 }
 
-func readTag(tagctrl byte, item *TlvItem, buf *bytes.Buffer) {
+func readTag(tagctrl byte, item *TlvItem, buf *bytes.Buffer) error {
 	if tagctrl == 1 {
-		item.Tag = readByte(buf)
+		v, err := readByte(buf)
+		if err != nil {
+			return err
+		}
+		item.Tag = v
 	}
+	return nil
 }
 
 func decode(buf *bytes.Buffer, container *TlvItem) error {
@@ -201,55 +206,95 @@ func decode(buf *bytes.Buffer, container *TlvItem) error {
 		switch tp {
 		case 0:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
-			current.valueInt = uint64(int8(readByte(buf)))
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
+			v, err := readByte(buf)
+			if err != nil {
+				return err
+			}
+			current.valueInt = uint64(int8(v))
 		case 1:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp int16
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV int16: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 2:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp int32
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV int32: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 3:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp int64
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV int64: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 4:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
-			current.valueInt = uint64(readByte(buf))
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
+			v, err := readByte(buf)
+			if err != nil {
+				return err
+			}
+			current.valueInt = uint64(v)
 		case 5:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp uint16
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV uint16: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 6:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp uint32
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV uint32: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 7:
 			current.Type = TypeInt
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var tmp uint64
-			binary.Read(buf, binary.LittleEndian, &tmp)
+			if err := binary.Read(buf, binary.LittleEndian, &tmp); err != nil {
+				return fmt.Errorf("truncated TLV uint64: %w", err)
+			}
 			current.valueInt = uint64(tmp)
 		case 8:
 			current.Type = TypeBool
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			current.valueBool = false
 		case 9:
 			current.Type = TypeBool
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			current.valueBool = true
 		case 0xa:
 			return fmt.Errorf("unsupported TLV type 0x%x (float)", tp)
@@ -257,42 +302,64 @@ func decode(buf *bytes.Buffer, container *TlvItem) error {
 			return fmt.Errorf("unsupported TLV type 0x%x (double)", tp)
 		case 0xc:
 			current.Type = TypeUTF8String
-			readTag(tagctrl, &current, buf)
-			size := readByte(buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
+			size, err := readByte(buf)
+			if err != nil {
+				return err
+			}
 			current.valueOctetString = make([]byte, size)
 			buf.Read(current.valueOctetString)
 			current.valueString = string(current.valueOctetString)
 		case 0x10:
 			current.Type = TypeOctetString
-			readTag(tagctrl, &current, buf)
-			size := readByte(buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
+			size, err := readByte(buf)
+			if err != nil {
+				return err
+			}
 			current.valueOctetString = make([]byte, size)
 			buf.Read(current.valueOctetString)
 		case 0x11:
 			current.Type = TypeOctetString
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			var size uint16
-			binary.Read(buf, binary.LittleEndian, &size)
+			if err := binary.Read(buf, binary.LittleEndian, &size); err != nil {
+				return fmt.Errorf("truncated TLV octet string length: %w", err)
+			}
 			current.valueOctetString = make([]byte, size)
 			buf.Read(current.valueOctetString)
 		case 0x14:
 			current.Type = TypeNull
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 		case 0x15:
 			current.Type = TypeList
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			if err := decode(buf, &current); err != nil {
 				return err
 			}
 		case 0x16:
 			current.Type = TypeList
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			if err := decode(buf, &current); err != nil {
 				return err
 			}
 		case 0x17:
 			current.Type = TypeList
-			readTag(tagctrl, &current, buf)
+			if err := readTag(tagctrl, &current, buf); err != nil {
+				return err
+			}
 			if err := decode(buf, &current); err != nil {
 				return err
 			}
