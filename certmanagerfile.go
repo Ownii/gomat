@@ -137,7 +137,11 @@ func (cm *FileCertManager) SignCertificate(user_pubkey *ecdsa.PublicKey, node_id
 	template.NotAfter = time.Now().AddDate(1, 0, 0)
 	template.Subject = subj
 	template.IsCA = false
-	template.SerialNumber = big.NewInt(10001)
+	serialNumber, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
+	if err != nil {
+		return nil, fmt.Errorf("generate serial number: %w", err)
+	}
+	template.SerialNumber = serialNumber
 
 	// order of extensions Matters!
 	// this is why some standard parameters are in this list - to enforce right order
