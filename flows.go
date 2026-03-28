@@ -164,6 +164,10 @@ func SigmaExchange(fabric *Fabric, controller_id uint64, device_id uint64, secur
 //   - controller_id is identifier of node whioch will be owner/admin of this device
 //   - device_id_id is identifier of "new" device
 func Commission(fabric *Fabric, device_ip net.IP, pin int, controller_id, device_id uint64) error {
+	if controller_id == device_id {
+		return fmt.Errorf("controller_id and device_id must be different (both are %d); "+
+			"SignCertificate for the device would overwrite the controller's certificate", controller_id)
+	}
 
 	channel, err := startUdpChannel(device_ip, 5540, 55555)
 	if err != nil {
