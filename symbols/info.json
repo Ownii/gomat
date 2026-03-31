@@ -1,10 +1,98 @@
 {
  "Clusters": {
   "0": {
-   "Name": "NetworkInfrastructure",
+   "Name": "WaterContentMeasurement",
    "Id": 0,
    "Commands": null,
    "Attributes": null
+  },
+  "100": {
+   "Name": "TemperatureAlarm",
+   "Id": 100,
+   "Commands": [
+    {
+     "Name": "SetTemperatureAlarmThresholds",
+     "Id": 128
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CriticalOverTemperatureThreshold",
+     "Id": 128
+    },
+    {
+     "Name": "MajorOverTemperatureThreshold",
+     "Id": 129
+    },
+    {
+     "Name": "MinorOverTemperatureThreshold",
+     "Id": 130
+    },
+    {
+     "Name": "MinorUnderTemperatureThreshold",
+     "Id": 131
+    },
+    {
+     "Name": "MajorUnderTemperatureThreshold",
+     "Id": 132
+    },
+    {
+     "Name": "CriticalUnderTemperatureThreshold",
+     "Id": 133
+    }
+   ]
+  },
+  "101": {
+   "Name": "Groupcast",
+   "Id": 101,
+   "Commands": [
+    {
+     "Name": "JoinGroup",
+     "Id": 0
+    },
+    {
+     "Name": "LeaveGroup",
+     "Id": 1
+    },
+    {
+     "Name": "LeaveGroupResponse",
+     "Id": 2
+    },
+    {
+     "Name": "UpdateGroupKey",
+     "Id": 3
+    },
+    {
+     "Name": "ConfigureAuxiliaryACL",
+     "Id": 4
+    },
+    {
+     "Name": "GroupcastTesting",
+     "Id": 5
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "Membership",
+     "Id": 0
+    },
+    {
+     "Name": "MaxMembershipCount",
+     "Id": 1
+    },
+    {
+     "Name": "MaxMcastAddrCount",
+     "Id": 2
+    },
+    {
+     "Name": "UsedMcastAddrCount",
+     "Id": 3
+    },
+    {
+     "Name": "FabricUnderTest",
+     "Id": 4
+    }
+   ]
   },
   "1024": {
    "Name": "IlluminanceMeasurement",
@@ -140,6 +228,14 @@
      "Id": 2
     },
     {
+     "Name": "HoldTime",
+     "Id": 3
+    },
+    {
+     "Name": "HoldTimeLimits",
+     "Id": 4
+    },
+    {
      "Name": "PIROccupiedToUnoccupiedDelay",
      "Id": 16
     },
@@ -177,36 +273,250 @@
     }
    ]
   },
-  "128": {
-   "Name": "BooleanSensorConfiguration",
-   "Id": 128,
+  "1072": {
+   "Name": "SoilMeasurement",
+   "Id": 1072,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "SoilMoistureMeasurementLimits",
+     "Id": 0
+    },
+    {
+     "Name": "SoilMoistureMeasuredValue",
+     "Id": 1
+    }
+   ]
+  },
+  "1104": {
+   "Name": "NetworkIdentityManagement",
+   "Id": 1104,
    "Commands": [
     {
-     "Name": "SuppressRequest",
+     "Name": "AddClient",
      "Id": 0
+    },
+    {
+     "Name": "AddClientResponse",
+     "Id": 1
+    },
+    {
+     "Name": "RemoveClient",
+     "Id": 2
+    },
+    {
+     "Name": "QueryIdentity",
+     "Id": 3
+    },
+    {
+     "Name": "QueryIdentityResponse",
+     "Id": 4
+    },
+    {
+     "Name": "ImportAdminSecret",
+     "Id": 64
+    },
+    {
+     "Name": "ExportAdminSecret",
+     "Id": 65
+    },
+    {
+     "Name": "ExportAdminSecretResponse",
+     "Id": 66
     }
    ],
    "Attributes": [
     {
-     "Name": "SensitivityLevel",
+     "Name": "ActiveNetworkIdentities",
      "Id": 0
     },
     {
-     "Name": "AlarmsActive",
+     "Name": "Clients",
      "Id": 1
     },
     {
-     "Name": "AlarmsSuppressed",
+     "Name": "ClientTableSize",
+     "Id": 2
+    }
+   ]
+  },
+  "1105": {
+   "Name": "WiFiNetworkManagement",
+   "Id": 1105,
+   "Commands": [
+    {
+     "Name": "NetworkPassphraseRequest",
+     "Id": 0
+    },
+    {
+     "Name": "NetworkPassphraseResponse",
+     "Id": 1
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "SSID",
+     "Id": 0
+    },
+    {
+     "Name": "PassphraseSurrogate",
+     "Id": 1
+    }
+   ]
+  },
+  "1106": {
+   "Name": "ThreadBorderRouterManagement",
+   "Id": 1106,
+   "Commands": [
+    {
+     "Name": "GetActiveDatasetRequest",
+     "Id": 0
+    },
+    {
+     "Name": "GetPendingDatasetRequest",
+     "Id": 1
+    },
+    {
+     "Name": "DatasetResponse",
      "Id": 2
     },
     {
-     "Name": "AlarmsEnabled",
+     "Name": "SetActiveDatasetRequest",
      "Id": 3
+    },
+    {
+     "Name": "SetPendingDatasetRequest",
+     "Id": 4
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "BorderRouterName",
+     "Id": 0
+    },
+    {
+     "Name": "BorderAgentID",
+     "Id": 1
+    },
+    {
+     "Name": "ThreadVersion",
+     "Id": 2
+    },
+    {
+     "Name": "InterfaceEnabled",
+     "Id": 3
+    },
+    {
+     "Name": "ActiveDatasetTimestamp",
+     "Id": 4
+    },
+    {
+     "Name": "PendingDatasetTimestamp",
+     "Id": 5
+    }
+   ]
+  },
+  "1107": {
+   "Name": "ThreadNetworkDirectory",
+   "Id": 1107,
+   "Commands": [
+    {
+     "Name": "AddNetwork",
+     "Id": 0
+    },
+    {
+     "Name": "RemoveNetwork",
+     "Id": 1
+    },
+    {
+     "Name": "GetOperationalDataset",
+     "Id": 2
+    },
+    {
+     "Name": "OperationalDatasetResponse",
+     "Id": 3
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "PreferredExtendedPanID",
+     "Id": 0
+    },
+    {
+     "Name": "ThreadNetworks",
+     "Id": 1
+    },
+    {
+     "Name": "ThreadNetworkTableSize",
+     "Id": 2
+    }
+   ]
+  },
+  "1108": {
+   "Name": "ThreadBorderRouterDiagnostics",
+   "Id": 1108,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "BrStatus",
+     "Id": 0
+    },
+    {
+     "Name": "ActiveTbrFaultsList",
+     "Id": 1
+    }
+   ]
+  },
+  "128": {
+   "Name": "BooleanStateConfiguration",
+   "Id": 128,
+   "Commands": [
+    {
+     "Name": "SuppressAlarm",
+     "Id": 0
+    },
+    {
+     "Name": "EnableDisableAlarm",
+     "Id": 1
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CurrentSensitivityLevel",
+     "Id": 0
+    },
+    {
+     "Name": "SupportedSensitivityLevels",
+     "Id": 1
+    },
+    {
+     "Name": "DefaultSensitivityLevel",
+     "Id": 2
+    },
+    {
+     "Name": "AlarmsActive",
+     "Id": 3
+    },
+    {
+     "Name": "AlarmsSuppressed",
+     "Id": 4
+    },
+    {
+     "Name": "AlarmsEnabled",
+     "Id": 5
+    },
+    {
+     "Name": "AlarmsSupported",
+     "Id": 6
+    },
+    {
+     "Name": "SensorFault",
+     "Id": 7
     }
    ]
   },
   "1283": {
-   "Name": "WakeonLAN",
+   "Name": "WakeOnLAN",
    "Id": 1283,
    "Commands": null,
    "Attributes": [
@@ -239,6 +549,22 @@
     {
      "Name": "SkipChannel",
      "Id": 3
+    },
+    {
+     "Name": "GetProgramGuide",
+     "Id": 4
+    },
+    {
+     "Name": "ProgramGuideResponse",
+     "Id": 5
+    },
+    {
+     "Name": "RecordProgram",
+     "Id": 6
+    },
+    {
+     "Name": "CancelRecordProgram",
+     "Id": 7
     }
    ],
    "Attributes": [
@@ -331,6 +657,18 @@
     {
      "Name": "Seek",
      "Id": 11
+    },
+    {
+     "Name": "ActivateAudioTrack",
+     "Id": 12
+    },
+    {
+     "Name": "ActivateTextTrack",
+     "Id": 13
+    },
+    {
+     "Name": "DeactivateTextTrack",
+     "Id": 14
     }
    ],
    "Attributes": [
@@ -361,6 +699,22 @@
     {
      "Name": "SeekRangeStart",
      "Id": 6
+    },
+    {
+     "Name": "ActiveAudioTrack",
+     "Id": 7
+    },
+    {
+     "Name": "AvailableAudioTracks",
+     "Id": 8
+    },
+    {
+     "Name": "ActiveTextTrack",
+     "Id": 9
+    },
+    {
+     "Name": "AvailableTextTracks",
+     "Id": 10
     }
    ]
   },
@@ -433,10 +787,6 @@
     {
      "Name": "Close",
      "Id": 1
-    },
-    {
-     "Name": "SetLevel",
-     "Id": 2
     }
    ],
    "Attributes": [
@@ -445,23 +795,23 @@
      "Id": 0
     },
     {
-     "Name": "AutoCloseTime",
+     "Name": "DefaultOpenDuration",
      "Id": 1
     },
     {
-     "Name": "RemainingDuration",
+     "Name": "AutoCloseTime",
      "Id": 2
     },
     {
-     "Name": "CurrentState",
+     "Name": "RemainingDuration",
      "Id": 3
     },
     {
-     "Name": "TargetState",
+     "Name": "CurrentState",
      "Id": 4
     },
     {
-     "Name": "StartUpState",
+     "Name": "TargetState",
      "Id": 5
     },
     {
@@ -473,12 +823,16 @@
      "Id": 7
     },
     {
-     "Name": "OpenLevel",
+     "Name": "DefaultOpenLevel",
      "Id": 8
     },
     {
      "Name": "ValveFault",
      "Id": 9
+    },
+    {
+     "Name": "LevelStep",
+     "Id": 10
     }
    ]
   },
@@ -629,38 +983,122 @@
    "Attributes": null
   },
   "1295": {
-   "Name": "MicrowaveOvenControl",
+   "Name": "ContentControl",
    "Id": 1295,
    "Commands": [
     {
-     "Name": "SetCookingParameters",
+     "Name": "UpdatePIN",
      "Id": 0
     },
     {
-     "Name": "AddMoreTime",
+     "Name": "ResetPIN",
      "Id": 1
+    },
+    {
+     "Name": "ResetPINResponse",
+     "Id": 2
+    },
+    {
+     "Name": "Enable",
+     "Id": 3
+    },
+    {
+     "Name": "Disable",
+     "Id": 4
+    },
+    {
+     "Name": "AddBonusTime",
+     "Id": 5
+    },
+    {
+     "Name": "SetScreenDailyTime",
+     "Id": 6
+    },
+    {
+     "Name": "BlockUnratedContent",
+     "Id": 7
+    },
+    {
+     "Name": "UnblockUnratedContent",
+     "Id": 8
+    },
+    {
+     "Name": "SetOnDemandRatingThreshold",
+     "Id": 9
+    },
+    {
+     "Name": "SetScheduledContentRatingThreshold",
+     "Id": 10
+    },
+    {
+     "Name": "AddBlockChannels",
+     "Id": 11
+    },
+    {
+     "Name": "RemoveBlockChannels",
+     "Id": 12
+    },
+    {
+     "Name": "AddBlockApplications",
+     "Id": 13
+    },
+    {
+     "Name": "RemoveBlockApplications",
+     "Id": 14
+    },
+    {
+     "Name": "SetBlockContentTimeWindow",
+     "Id": 15
+    },
+    {
+     "Name": "RemoveBlockContentTimeWindow",
+     "Id": 16
     }
    ],
    "Attributes": [
     {
-     "Name": "CookTime",
+     "Name": "Enabled",
+     "Id": 0
+    },
+    {
+     "Name": "OnDemandRatings",
      "Id": 1
     },
     {
-     "Name": "PowerSetting",
+     "Name": "OnDemandRatingThreshold",
      "Id": 2
     },
     {
-     "Name": "MinPower",
+     "Name": "ScheduledContentRatings",
      "Id": 3
     },
     {
-     "Name": "MaxPower",
+     "Name": "ScheduledContentRatingThreshold",
      "Id": 4
     },
     {
-     "Name": "PowerStep",
+     "Name": "ScreenDailyTime",
      "Id": 5
+    },
+    {
+     "Name": "RemainingScreenTime",
+     "Id": 6
+    },
+    {
+     "Name": "BlockUnrated",
+     "Id": 7
+    },
+    {
+     "Name": "BlockChannelList",
+     "Id": 8
+    },
+    {
+     "Name": "BlockApplicationList",
+     "Id": 9
+    },
+    {
+     "Name": "BlockContentTimeWindow",
+     "Id": 10
     }
    ]
   },
@@ -679,6 +1117,510 @@
    ],
    "Attributes": null
   },
+  "1360": {
+   "Name": "ZoneManagement",
+   "Id": 1360,
+   "Commands": [
+    {
+     "Name": "CreateTwoDCartesianZone",
+     "Id": 0
+    },
+    {
+     "Name": "CreateTwoDCartesianZoneResponse",
+     "Id": 1
+    },
+    {
+     "Name": "UpdateTwoDCartesianZone",
+     "Id": 2
+    },
+    {
+     "Name": "RemoveZone",
+     "Id": 3
+    },
+    {
+     "Name": "CreateOrUpdateTrigger",
+     "Id": 4
+    },
+    {
+     "Name": "RemoveTrigger",
+     "Id": 5
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "MaxUserDefinedZones",
+     "Id": 0
+    },
+    {
+     "Name": "MaxZones",
+     "Id": 1
+    },
+    {
+     "Name": "Zones",
+     "Id": 2
+    },
+    {
+     "Name": "Triggers",
+     "Id": 3
+    },
+    {
+     "Name": "SensitivityMax",
+     "Id": 4
+    },
+    {
+     "Name": "Sensitivity",
+     "Id": 5
+    },
+    {
+     "Name": "TwoDCartesianMax",
+     "Id": 6
+    }
+   ]
+  },
+  "1361": {
+   "Name": "CameraAVStreamManagement",
+   "Id": 1361,
+   "Commands": [
+    {
+     "Name": "AudioStreamAllocate",
+     "Id": 0
+    },
+    {
+     "Name": "AudioStreamAllocateResponse",
+     "Id": 1
+    },
+    {
+     "Name": "AudioStreamDeallocate",
+     "Id": 2
+    },
+    {
+     "Name": "VideoStreamAllocate",
+     "Id": 3
+    },
+    {
+     "Name": "VideoStreamAllocateResponse",
+     "Id": 4
+    },
+    {
+     "Name": "VideoStreamModify",
+     "Id": 5
+    },
+    {
+     "Name": "VideoStreamDeallocate",
+     "Id": 6
+    },
+    {
+     "Name": "SnapshotStreamAllocate",
+     "Id": 7
+    },
+    {
+     "Name": "SnapshotStreamAllocateResponse",
+     "Id": 8
+    },
+    {
+     "Name": "SnapshotStreamModify",
+     "Id": 9
+    },
+    {
+     "Name": "SnapshotStreamDeallocate",
+     "Id": 10
+    },
+    {
+     "Name": "SetStreamPriorities",
+     "Id": 11
+    },
+    {
+     "Name": "CaptureSnapshot",
+     "Id": 12
+    },
+    {
+     "Name": "CaptureSnapshotResponse",
+     "Id": 13
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "MaxConcurrentEncoders",
+     "Id": 0
+    },
+    {
+     "Name": "MaxEncodedPixelRate",
+     "Id": 1
+    },
+    {
+     "Name": "VideoSensorParams",
+     "Id": 2
+    },
+    {
+     "Name": "NightVisionUsesInfrared",
+     "Id": 3
+    },
+    {
+     "Name": "MinViewportResolution",
+     "Id": 4
+    },
+    {
+     "Name": "RateDistortionTradeOffPoints",
+     "Id": 5
+    },
+    {
+     "Name": "MaxContentBufferSize",
+     "Id": 6
+    },
+    {
+     "Name": "MicrophoneCapabilities",
+     "Id": 7
+    },
+    {
+     "Name": "SpeakerCapabilities",
+     "Id": 8
+    },
+    {
+     "Name": "TwoWayTalkSupport",
+     "Id": 9
+    },
+    {
+     "Name": "SnapshotCapabilities",
+     "Id": 10
+    },
+    {
+     "Name": "MaxNetworkBandwidth",
+     "Id": 11
+    },
+    {
+     "Name": "CurrentFrameRate",
+     "Id": 12
+    },
+    {
+     "Name": "HDRModeEnabled",
+     "Id": 13
+    },
+    {
+     "Name": "SupportedStreamUsages",
+     "Id": 14
+    },
+    {
+     "Name": "AllocatedVideoStreams",
+     "Id": 15
+    },
+    {
+     "Name": "AllocatedAudioStreams",
+     "Id": 16
+    },
+    {
+     "Name": "AllocatedSnapshotStreams",
+     "Id": 17
+    },
+    {
+     "Name": "StreamUsagePriorities",
+     "Id": 18
+    },
+    {
+     "Name": "SoftRecordingPrivacyModeEnabled",
+     "Id": 19
+    },
+    {
+     "Name": "SoftLivestreamPrivacyModeEnabled",
+     "Id": 20
+    },
+    {
+     "Name": "HardPrivacyModeOn",
+     "Id": 21
+    },
+    {
+     "Name": "NightVision",
+     "Id": 22
+    },
+    {
+     "Name": "NightVisionIllum",
+     "Id": 23
+    },
+    {
+     "Name": "Viewport",
+     "Id": 24
+    },
+    {
+     "Name": "SpeakerMuted",
+     "Id": 25
+    },
+    {
+     "Name": "SpeakerVolumeLevel",
+     "Id": 26
+    },
+    {
+     "Name": "SpeakerMaxLevel",
+     "Id": 27
+    },
+    {
+     "Name": "SpeakerMinLevel",
+     "Id": 28
+    },
+    {
+     "Name": "MicrophoneMuted",
+     "Id": 29
+    },
+    {
+     "Name": "MicrophoneVolumeLevel",
+     "Id": 30
+    },
+    {
+     "Name": "MicrophoneMaxLevel",
+     "Id": 31
+    },
+    {
+     "Name": "MicrophoneMinLevel",
+     "Id": 32
+    },
+    {
+     "Name": "MicrophoneAGCEnabled",
+     "Id": 33
+    },
+    {
+     "Name": "ImageRotation",
+     "Id": 34
+    },
+    {
+     "Name": "ImageFlipHorizontal",
+     "Id": 35
+    },
+    {
+     "Name": "ImageFlipVertical",
+     "Id": 36
+    },
+    {
+     "Name": "LocalVideoRecordingEnabled",
+     "Id": 37
+    },
+    {
+     "Name": "LocalSnapshotRecordingEnabled",
+     "Id": 38
+    },
+    {
+     "Name": "StatusLightEnabled",
+     "Id": 39
+    },
+    {
+     "Name": "StatusLightBrightness",
+     "Id": 40
+    }
+   ]
+  },
+  "1362": {
+   "Name": "CameraAVSettingsUserLevelManagement",
+   "Id": 1362,
+   "Commands": [
+    {
+     "Name": "MPTZSetPosition",
+     "Id": 0
+    },
+    {
+     "Name": "MPTZRelativeMove",
+     "Id": 1
+    },
+    {
+     "Name": "MPTZMoveToPreset",
+     "Id": 2
+    },
+    {
+     "Name": "MPTZSavePreset",
+     "Id": 3
+    },
+    {
+     "Name": "MPTZRemovePreset",
+     "Id": 4
+    },
+    {
+     "Name": "DPTZSetViewport",
+     "Id": 5
+    },
+    {
+     "Name": "DPTZRelativeMove",
+     "Id": 6
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "MPTZPosition",
+     "Id": 0
+    },
+    {
+     "Name": "MaxPresets",
+     "Id": 1
+    },
+    {
+     "Name": "MPTZPresets",
+     "Id": 2
+    },
+    {
+     "Name": "DPTZStreams",
+     "Id": 3
+    },
+    {
+     "Name": "ZoomMax",
+     "Id": 4
+    },
+    {
+     "Name": "TiltMin",
+     "Id": 5
+    },
+    {
+     "Name": "TiltMax",
+     "Id": 6
+    },
+    {
+     "Name": "PanMin",
+     "Id": 7
+    },
+    {
+     "Name": "PanMax",
+     "Id": 8
+    },
+    {
+     "Name": "MovementState",
+     "Id": 9
+    }
+   ]
+  },
+  "1363": {
+   "Name": "WebRTCTransportProvider",
+   "Id": 1363,
+   "Commands": [
+    {
+     "Name": "SolicitOffer",
+     "Id": 0
+    },
+    {
+     "Name": "SolicitOfferResponse",
+     "Id": 1
+    },
+    {
+     "Name": "ProvideOffer",
+     "Id": 2
+    },
+    {
+     "Name": "ProvideOfferResponse",
+     "Id": 3
+    },
+    {
+     "Name": "ProvideAnswer",
+     "Id": 4
+    },
+    {
+     "Name": "ProvideICECandidates",
+     "Id": 5
+    },
+    {
+     "Name": "EndSession",
+     "Id": 6
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CurrentSessions",
+     "Id": 0
+    }
+   ]
+  },
+  "1364": {
+   "Name": "WebRTCTransportRequestor",
+   "Id": 1364,
+   "Commands": [
+    {
+     "Name": "Offer",
+     "Id": 0
+    },
+    {
+     "Name": "Answer",
+     "Id": 1
+    },
+    {
+     "Name": "ICECandidates",
+     "Id": 2
+    },
+    {
+     "Name": "End",
+     "Id": 3
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CurrentSessions",
+     "Id": 0
+    }
+   ]
+  },
+  "1365": {
+   "Name": "PushAVStreamTransport",
+   "Id": 1365,
+   "Commands": [
+    {
+     "Name": "AllocatePushTransport",
+     "Id": 0
+    },
+    {
+     "Name": "AllocatePushTransportResponse",
+     "Id": 1
+    },
+    {
+     "Name": "DeallocatePushTransport",
+     "Id": 2
+    },
+    {
+     "Name": "ModifyPushTransport",
+     "Id": 3
+    },
+    {
+     "Name": "SetTransportStatus",
+     "Id": 4
+    },
+    {
+     "Name": "ManuallyTriggerTransport",
+     "Id": 5
+    },
+    {
+     "Name": "FindTransport",
+     "Id": 6
+    },
+    {
+     "Name": "FindTransportResponse",
+     "Id": 7
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "SupportedFormats",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentConnections",
+     "Id": 1
+    }
+   ]
+  },
+  "1366": {
+   "Name": "Chime",
+   "Id": 1366,
+   "Commands": [
+    {
+     "Name": "PlayChimeSound",
+     "Id": 0
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "InstalledChimeSounds",
+     "Id": 0
+    },
+    {
+     "Name": "SelectedChime",
+     "Id": 1
+    },
+    {
+     "Name": "Enabled",
+     "Id": 2
+    }
+   ]
+  },
   "144": {
    "Name": "ElectricalPowerMeasurement",
    "Id": 144,
@@ -689,35 +1631,35 @@
      "Id": 0
     },
     {
-     "Name": "Accuracy",
+     "Name": "NumberOfMeasurementTypes",
      "Id": 1
     },
     {
-     "Name": "Ranges",
+     "Name": "Accuracy",
      "Id": 2
     },
     {
-     "Name": "Voltage",
+     "Name": "Ranges",
      "Id": 3
     },
     {
-     "Name": "Current",
+     "Name": "Voltage",
      "Id": 4
     },
     {
-     "Name": "ActivePower",
+     "Name": "ActiveCurrent",
      "Id": 5
     },
     {
-     "Name": "RMSCurrent",
+     "Name": "ReactiveCurrent",
      "Id": 6
     },
     {
-     "Name": "RMSPower",
+     "Name": "ApparentCurrent",
      "Id": 7
     },
     {
-     "Name": "ApparentPower",
+     "Name": "ActivePower",
      "Id": 8
     },
     {
@@ -725,28 +1667,40 @@
      "Id": 9
     },
     {
-     "Name": "Frequency",
+     "Name": "ApparentPower",
      "Id": 10
     },
     {
-     "Name": "HarmonicCurrents",
+     "Name": "RMSVoltage",
      "Id": 11
     },
     {
-     "Name": "HarmonicPhases",
+     "Name": "RMSCurrent",
      "Id": 12
     },
     {
-     "Name": "PowerFactor",
+     "Name": "RMSPower",
      "Id": 13
     },
     {
-     "Name": "LineCurrent",
+     "Name": "Frequency",
      "Id": 14
     },
     {
-     "Name": "NeutralCurrent",
+     "Name": "HarmonicCurrents",
      "Id": 15
+    },
+    {
+     "Name": "HarmonicPhases",
+     "Id": 16
+    },
+    {
+     "Name": "PowerFactor",
+     "Id": 17
+    },
+    {
+     "Name": "NeutralCurrent",
+     "Id": 18
     }
    ]
   },
@@ -756,52 +1710,28 @@
    "Commands": null,
    "Attributes": [
     {
-     "Name": "Measured",
+     "Name": "Accuracy",
      "Id": 0
     },
     {
-     "Name": "CumulativeEnergyImportedTime",
+     "Name": "CumulativeEnergyImported",
      "Id": 1
     },
     {
-     "Name": "CumulativeEnergyImported",
+     "Name": "CumulativeEnergyExported",
      "Id": 2
     },
     {
-     "Name": "CumulativeEnergyExportedTime",
+     "Name": "PeriodicEnergyImported",
      "Id": 3
     },
     {
-     "Name": "CumulativeEnergyExported",
+     "Name": "PeriodicEnergyExported",
      "Id": 4
     },
     {
-     "Name": "PeriodicEnergyImportedStartTime",
+     "Name": "CumulativeEnergyReset",
      "Id": 5
-    },
-    {
-     "Name": "PeriodicEnergyImportedEndTime",
-     "Id": 6
-    },
-    {
-     "Name": "PeriodicEnergyImported",
-     "Id": 7
-    },
-    {
-     "Name": "PeriodicEnergyExportedStartTime",
-     "Id": 8
-    },
-    {
-     "Name": "PeriodicEnergyExportedEndTime",
-     "Id": 9
-    },
-    {
-     "Name": "PeriodicEnergyExported",
-     "Id": 10
-    },
-    {
-     "Name": "EphemeralEnergyImported",
-     "Id": 11
     }
    ]
   },
@@ -811,7 +1741,7 @@
    "Commands": [
     {
      "Name": "Boost",
-     "Id": 1
+     "Id": 0
     },
     {
      "Name": "CancelBoost",
@@ -838,11 +1768,15 @@
     {
      "Name": "TankPercentage",
      "Id": 4
+    },
+    {
+     "Name": "BoostState",
+     "Id": 5
     }
    ]
   },
   "149": {
-   "Name": "EnergyPrice",
+   "Name": "CommodityPrice",
    "Id": 149,
    "Commands": [
     {
@@ -864,76 +1798,20 @@
    ],
    "Attributes": [
     {
-     "Name": "UnitOfMeasure",
+     "Name": "TariffUnit",
      "Id": 0
+    },
+    {
+     "Name": "Currency",
+     "Id": 1
     },
     {
      "Name": "CurrentPrice",
-     "Id": 1
+     "Id": 2
     },
     {
      "Name": "PriceForecast",
-     "Id": 2
-    }
-   ]
-  },
-  "150": {
-   "Name": "DemandResponseandLoadControl",
-   "Id": 150,
-   "Commands": [
-    {
-     "Name": "RegisterLoadControlProgramRequest",
-     "Id": 0
-    },
-    {
-     "Name": "UnregisterLoadControlProgramRequest",
-     "Id": 1
-    },
-    {
-     "Name": "AddLoadControlEventRequest",
-     "Id": 2
-    },
-    {
-     "Name": "RemoveLoadControlEventRequest",
      "Id": 3
-    },
-    {
-     "Name": "ClearLoadControlEventsRequest",
-     "Id": 4
-    }
-   ],
-   "Attributes": [
-    {
-     "Name": "DeviceClass",
-     "Id": 0
-    },
-    {
-     "Name": "LoadControlPrograms",
-     "Id": 1
-    },
-    {
-     "Name": "NumberOfLoadControlPrograms",
-     "Id": 2
-    },
-    {
-     "Name": "Events",
-     "Id": 3
-    },
-    {
-     "Name": "NumberOfEventsPerProgram",
-     "Id": 4
-    },
-    {
-     "Name": "NumberOfTransitions",
-     "Id": 5
-    },
-    {
-     "Name": "DefaultRandomStart",
-     "Id": 6
-    },
-    {
-     "Name": "DefaultRandomDuration",
-     "Id": 7
     }
    ]
   },
@@ -986,25 +1864,29 @@
      "Id": 4
     },
     {
-     "Name": "ModifyPowerForecastRequest",
+     "Name": "ModifyForecastRequest",
      "Id": 5
     },
     {
-     "Name": "RequestLimitBasedPowerForecast",
+     "Name": "RequestConstraintBasedForecast",
      "Id": 6
+    },
+    {
+     "Name": "CancelRequest",
+     "Id": 7
     }
    ],
    "Attributes": [
     {
-     "Name": "EsaType",
+     "Name": "ESAType",
      "Id": 0
     },
     {
-     "Name": "EsaIsGenerator",
+     "Name": "ESACanGenerate",
      "Id": 1
     },
     {
-     "Name": "EsaState",
+     "Name": "ESAState",
      "Id": 2
     },
     {
@@ -1020,71 +1902,144 @@
      "Id": 5
     },
     {
-     "Name": "PowerForecast",
+     "Name": "Forecast",
      "Id": 6
+    },
+    {
+     "Name": "OptOutState",
+     "Id": 7
     }
    ]
   },
-  "154": {
-   "Name": "EnergyCalendar",
-   "Id": 154,
-   "Commands": null,
-   "Attributes": [
+  "153": {
+   "Name": "EnergyEVSE",
+   "Id": 153,
+   "Commands": [
     {
-     "Name": "CalendarID",
+     "Name": "GetTargetsResponse",
      "Id": 0
     },
     {
-     "Name": "Name",
+     "Name": "Disable",
      "Id": 1
     },
     {
-     "Name": "ProviderID",
+     "Name": "EnableCharging",
      "Id": 2
     },
     {
-     "Name": "EventID",
+     "Name": "EnableDischarging",
      "Id": 3
     },
     {
-     "Name": "StartDate",
+     "Name": "StartDiagnostics",
      "Id": 4
     },
     {
-     "Name": "TimeReference",
+     "Name": "SetTargets",
      "Id": 5
     },
     {
-     "Name": "CalendarPeriods",
+     "Name": "GetTargets",
      "Id": 6
     },
     {
-     "Name": "SpecialDays",
+     "Name": "ClearTargets",
+     "Id": 7
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "State",
+     "Id": 0
+    },
+    {
+     "Name": "SupplyState",
+     "Id": 1
+    },
+    {
+     "Name": "FaultState",
+     "Id": 2
+    },
+    {
+     "Name": "ChargingEnabledUntil",
+     "Id": 3
+    },
+    {
+     "Name": "DischargingEnabledUntil",
+     "Id": 4
+    },
+    {
+     "Name": "CircuitCapacity",
+     "Id": 5
+    },
+    {
+     "Name": "MinimumChargeCurrent",
+     "Id": 6
+    },
+    {
+     "Name": "MaximumChargeCurrent",
      "Id": 7
     },
     {
-     "Name": "CurrentDay",
+     "Name": "MaximumDischargeCurrent",
+     "Id": 8
+    },
+    {
+     "Name": "UserMaximumChargeCurrent",
+     "Id": 9
+    },
+    {
+     "Name": "RandomizationDelayWindow",
      "Id": 10
     },
     {
-     "Name": "NextDay",
-     "Id": 13
+     "Name": "NextChargeStartTime",
+     "Id": 35
     },
     {
-     "Name": "CurrentTransition",
-     "Id": 13
+     "Name": "NextChargeTargetTime",
+     "Id": 36
     },
     {
-     "Name": "PeakPeriodStatus",
-     "Id": 15
+     "Name": "NextChargeRequiredEnergy",
+     "Id": 37
     },
     {
-     "Name": "PeakPeriodStartTime",
-     "Id": 16
+     "Name": "NextChargeTargetSoC",
+     "Id": 38
     },
     {
-     "Name": "PeakPeriodEndTime",
-     "Id": 17
+     "Name": "ApproximateEVEfficiency",
+     "Id": 39
+    },
+    {
+     "Name": "StateOfCharge",
+     "Id": 48
+    },
+    {
+     "Name": "BatteryCapacity",
+     "Id": 49
+    },
+    {
+     "Name": "VehicleID",
+     "Id": 50
+    },
+    {
+     "Name": "SessionID",
+     "Id": 64
+    },
+    {
+     "Name": "SessionDuration",
+     "Id": 65
+    },
+    {
+     "Name": "SessionEnergyCharged",
+     "Id": 66
+    },
+    {
+     "Name": "SessionEnergyDischarged",
+     "Id": 67
     }
    ]
   },
@@ -1102,16 +2057,570 @@
      "Id": 1
     },
     {
-     "Name": "CurrentLowPowerModeSensitivity",
-     "Id": 1
-    },
-    {
      "Name": "EnergyPriorities",
      "Id": 2
     },
     {
      "Name": "LowPowerModeSensitivities",
      "Id": 3
+    },
+    {
+     "Name": "CurrentLowPowerModeSensitivity",
+     "Id": 4
+    }
+   ]
+  },
+  "156": {
+   "Name": "PowerTopology",
+   "Id": 156,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "AvailableEndpoints",
+     "Id": 0
+    },
+    {
+     "Name": "ActiveEndpoints",
+     "Id": 1
+    }
+   ]
+  },
+  "157": {
+   "Name": "EnergyEVSEMode",
+   "Id": 157,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
+  },
+  "158": {
+   "Name": "WaterHeaterMode",
+   "Id": 158,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
+  },
+  "159": {
+   "Name": "DeviceEnergyManagementMode",
+   "Id": 159,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
+  },
+  "160": {
+   "Name": "ElectricalGridConditions",
+   "Id": 160,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "LocalGenerationAvailable",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentConditions",
+     "Id": 1
+    },
+    {
+     "Name": "ForecastConditions",
+     "Id": 2
+    }
+   ]
+  },
+  "1792": {
+   "Name": "CommodityTariff",
+   "Id": 1792,
+   "Commands": [
+    {
+     "Name": "GetTariffComponent",
+     "Id": 0
+    },
+    {
+     "Name": "GetTariffComponentResponse",
+     "Id": 0
+    },
+    {
+     "Name": "GetDayEntry",
+     "Id": 1
+    },
+    {
+     "Name": "GetDayEntryResponse",
+     "Id": 1
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "TariffInfo",
+     "Id": 0
+    },
+    {
+     "Name": "TariffUnit",
+     "Id": 1
+    },
+    {
+     "Name": "StartDate",
+     "Id": 2
+    },
+    {
+     "Name": "DayEntries",
+     "Id": 3
+    },
+    {
+     "Name": "DayPatterns",
+     "Id": 4
+    },
+    {
+     "Name": "CalendarPeriods",
+     "Id": 5
+    },
+    {
+     "Name": "IndividualDays",
+     "Id": 6
+    },
+    {
+     "Name": "CurrentDay",
+     "Id": 7
+    },
+    {
+     "Name": "NextDay",
+     "Id": 8
+    },
+    {
+     "Name": "CurrentDayEntry",
+     "Id": 9
+    },
+    {
+     "Name": "CurrentDayEntryDate",
+     "Id": 10
+    },
+    {
+     "Name": "NextDayEntry",
+     "Id": 11
+    },
+    {
+     "Name": "NextDayEntryDate",
+     "Id": 12
+    },
+    {
+     "Name": "TariffComponents",
+     "Id": 13
+    },
+    {
+     "Name": "TariffPeriods",
+     "Id": 14
+    },
+    {
+     "Name": "CurrentTariffComponents",
+     "Id": 15
+    },
+    {
+     "Name": "NextTariffComponents",
+     "Id": 16
+    },
+    {
+     "Name": "DefaultRandomizationOffset",
+     "Id": 17
+    },
+    {
+     "Name": "DefaultRandomizationType",
+     "Id": 18
+    }
+   ]
+  },
+  "1872": {
+   "Name": "EcosystemInformation",
+   "Id": 1872,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "DeviceDirectory",
+     "Id": 0
+    },
+    {
+     "Name": "LocationDirectory",
+     "Id": 1
+    }
+   ]
+  },
+  "1873": {
+   "Name": "CommissionerControl",
+   "Id": 1873,
+   "Commands": [
+    {
+     "Name": "RequestCommissioningApproval",
+     "Id": 0
+    },
+    {
+     "Name": "CommissionNode",
+     "Id": 1
+    },
+    {
+     "Name": "ReverseOpenCommissioningWindow",
+     "Id": 2
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "SupportedDeviceCategories",
+     "Id": 0
+    }
+   ]
+  },
+  "1874": {
+   "Name": "JointFabricDatastore",
+   "Id": 1874,
+   "Commands": [
+    {
+     "Name": "AddKeySet",
+     "Id": 0
+    },
+    {
+     "Name": "UpdateKeySet",
+     "Id": 1
+    },
+    {
+     "Name": "RemoveKeySet",
+     "Id": 2
+    },
+    {
+     "Name": "AddGroup",
+     "Id": 3
+    },
+    {
+     "Name": "UpdateGroup",
+     "Id": 4
+    },
+    {
+     "Name": "RemoveGroup",
+     "Id": 5
+    },
+    {
+     "Name": "AddAdmin",
+     "Id": 6
+    },
+    {
+     "Name": "UpdateAdmin",
+     "Id": 7
+    },
+    {
+     "Name": "RemoveAdmin",
+     "Id": 8
+    },
+    {
+     "Name": "AddPendingNode",
+     "Id": 9
+    },
+    {
+     "Name": "RefreshNode",
+     "Id": 10
+    },
+    {
+     "Name": "UpdateNode",
+     "Id": 11
+    },
+    {
+     "Name": "RemoveNode",
+     "Id": 12
+    },
+    {
+     "Name": "UpdateEndpointForNode",
+     "Id": 13
+    },
+    {
+     "Name": "AddGroupIDToEndpointForNode",
+     "Id": 14
+    },
+    {
+     "Name": "RemoveGroupIDFromEndpointForNode",
+     "Id": 15
+    },
+    {
+     "Name": "AddBindingToEndpointForNode",
+     "Id": 16
+    },
+    {
+     "Name": "RemoveBindingFromEndpointForNode",
+     "Id": 17
+    },
+    {
+     "Name": "AddACLToNode",
+     "Id": 18
+    },
+    {
+     "Name": "RemoveACLFromNode",
+     "Id": 19
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "AnchorRootCA",
+     "Id": 0
+    },
+    {
+     "Name": "AnchorNodeID",
+     "Id": 1
+    },
+    {
+     "Name": "AnchorVendorID",
+     "Id": 2
+    },
+    {
+     "Name": "FriendlyName",
+     "Id": 3
+    },
+    {
+     "Name": "GroupKeySetList",
+     "Id": 4
+    },
+    {
+     "Name": "GroupList",
+     "Id": 5
+    },
+    {
+     "Name": "NodeList",
+     "Id": 6
+    },
+    {
+     "Name": "AdminList",
+     "Id": 7
+    },
+    {
+     "Name": "Status",
+     "Id": 8
+    },
+    {
+     "Name": "EndpointGroupIDList",
+     "Id": 9
+    },
+    {
+     "Name": "EndpointBindingList",
+     "Id": 10
+    },
+    {
+     "Name": "NodeKeySetList",
+     "Id": 11
+    },
+    {
+     "Name": "NodeACLList",
+     "Id": 12
+    },
+    {
+     "Name": "NodeEndpointList",
+     "Id": 13
+    }
+   ]
+  },
+  "1875": {
+   "Name": "JointFabricAdministrator",
+   "Id": 1875,
+   "Commands": [
+    {
+     "Name": "ICACCSRRequest",
+     "Id": 0
+    },
+    {
+     "Name": "ICACCSRResponse",
+     "Id": 1
+    },
+    {
+     "Name": "AddICAC",
+     "Id": 2
+    },
+    {
+     "Name": "ICACResponse",
+     "Id": 3
+    },
+    {
+     "Name": "OpenJointCommissioningWindow",
+     "Id": 4
+    },
+    {
+     "Name": "TransferAnchorRequest",
+     "Id": 5
+    },
+    {
+     "Name": "TransferAnchorResponse",
+     "Id": 6
+    },
+    {
+     "Name": "TransferAnchorComplete",
+     "Id": 7
+    },
+    {
+     "Name": "AnnounceJointFabricAdministrator",
+     "Id": 8
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "AdministratorFabricIndex",
+     "Id": 0
+    }
+   ]
+  },
+  "2049": {
+   "Name": "TLSCertificateManagement",
+   "Id": 2049,
+   "Commands": [
+    {
+     "Name": "ProvisionRootCertificate",
+     "Id": 0
+    },
+    {
+     "Name": "ProvisionRootCertificateResponse",
+     "Id": 1
+    },
+    {
+     "Name": "FindRootCertificate",
+     "Id": 2
+    },
+    {
+     "Name": "FindRootCertificateResponse",
+     "Id": 3
+    },
+    {
+     "Name": "LookupRootCertificate",
+     "Id": 4
+    },
+    {
+     "Name": "LookupRootCertificateResponse",
+     "Id": 5
+    },
+    {
+     "Name": "RemoveRootCertificate",
+     "Id": 6
+    },
+    {
+     "Name": "ClientCSR",
+     "Id": 7
+    },
+    {
+     "Name": "ClientCSRResponse",
+     "Id": 8
+    },
+    {
+     "Name": "ProvisionClientCertificate",
+     "Id": 9
+    },
+    {
+     "Name": "FindClientCertificate",
+     "Id": 10
+    },
+    {
+     "Name": "FindClientCertificateResponse",
+     "Id": 11
+    },
+    {
+     "Name": "LookupClientCertificate",
+     "Id": 12
+    },
+    {
+     "Name": "LookupClientCertificateResponse",
+     "Id": 13
+    },
+    {
+     "Name": "RemoveClientCertificate",
+     "Id": 14
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "MaxRootCertificates",
+     "Id": 0
+    },
+    {
+     "Name": "ProvisionedRootCertificates",
+     "Id": 1
+    },
+    {
+     "Name": "MaxClientCertificates",
+     "Id": 2
+    },
+    {
+     "Name": "ProvisionedClientCertificates",
+     "Id": 3
+    }
+   ]
+  },
+  "2050": {
+   "Name": "TLSClientManagement",
+   "Id": 2050,
+   "Commands": [
+    {
+     "Name": "ProvisionEndpoint",
+     "Id": 0
+    },
+    {
+     "Name": "ProvisionEndpointResponse",
+     "Id": 1
+    },
+    {
+     "Name": "FindEndpoint",
+     "Id": 2
+    },
+    {
+     "Name": "FindEndpointResponse",
+     "Id": 3
+    },
+    {
+     "Name": "RemoveEndpoint",
+     "Id": 4
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "MaxProvisioned",
+     "Id": 0
+    },
+    {
+     "Name": "ProvisionedEndpoints",
+     "Id": 1
     }
    ]
   },
@@ -1132,48 +2641,8 @@
      "Id": 2
     },
     {
-     "Name": "UnlockwithTimeout",
+     "Name": "UnlockWithTimeout",
      "Id": 3
-    },
-    {
-     "Name": "GetLogRecord",
-     "Id": 4
-    },
-    {
-     "Name": "GetLogRecordResponse",
-     "Id": 4
-    },
-    {
-     "Name": "SetPINCode",
-     "Id": 5
-    },
-    {
-     "Name": "GetPINCode",
-     "Id": 6
-    },
-    {
-     "Name": "GetPINCodeResponse",
-     "Id": 6
-    },
-    {
-     "Name": "ClearPINCode",
-     "Id": 7
-    },
-    {
-     "Name": "ClearAllPINCodes",
-     "Id": 8
-    },
-    {
-     "Name": "SetUserStatus",
-     "Id": 9
-    },
-    {
-     "Name": "GetUserStatus",
-     "Id": 10
-    },
-    {
-     "Name": "GetUserStatusResponse",
-     "Id": 10
     },
     {
      "Name": "SetWeekDaySchedule",
@@ -1224,38 +2693,6 @@
      "Id": 19
     },
     {
-     "Name": "SetUserType",
-     "Id": 20
-    },
-    {
-     "Name": "GetUserType",
-     "Id": 21
-    },
-    {
-     "Name": "GetUserTypeResponse",
-     "Id": 21
-    },
-    {
-     "Name": "SetRFIDCode",
-     "Id": 22
-    },
-    {
-     "Name": "GetRFIDCode",
-     "Id": 23
-    },
-    {
-     "Name": "GetRFIDCodeResponse",
-     "Id": 23
-    },
-    {
-     "Name": "ClearRFIDCode",
-     "Id": 24
-    },
-    {
-     "Name": "ClearAllRFIDCodes",
-     "Id": 25
-    },
-    {
      "Name": "SetUser",
      "Id": 26
     },
@@ -1270,14 +2707,6 @@
     {
      "Name": "ClearUser",
      "Id": 29
-    },
-    {
-     "Name": "OperatingEventNotification",
-     "Id": 32
-    },
-    {
-     "Name": "ProgrammingEventNotification",
-     "Id": 33
     },
     {
      "Name": "SetCredential",
@@ -1302,6 +2731,14 @@
     {
      "Name": "UnboltDoor",
      "Id": 39
+    },
+    {
+     "Name": "SetAliroReaderConfig",
+     "Id": 40
+    },
+    {
+     "Name": "ClearAliroReaderConfig",
+     "Id": 41
     }
    ],
    "Attributes": [
@@ -1332,10 +2769,6 @@
     {
      "Name": "OpenPeriod",
      "Id": 6
-    },
-    {
-     "Name": "NumberOfLogRecordsSupported",
-     "Id": 16
     },
     {
      "Name": "NumberOfTotalUsersSupported",
@@ -1384,10 +2817,6 @@
     {
      "Name": "NumberOfCredentialsSupportedPerUser",
      "Id": 28
-    },
-    {
-     "Name": "EnableLogging",
-     "Id": 32
     },
     {
      "Name": "Language",
@@ -1462,36 +2891,40 @@
      "Id": 53
     },
     {
-     "Name": "AlarmMask",
-     "Id": 64
+     "Name": "AliroReaderVerificationKey",
+     "Id": 128
     },
     {
-     "Name": "KeypadOperationEventMask",
-     "Id": 65
+     "Name": "AliroReaderGroupIdentifier",
+     "Id": 129
     },
     {
-     "Name": "RemoteOperationEventMask",
-     "Id": 66
+     "Name": "AliroReaderGroupSubIdentifier",
+     "Id": 130
     },
     {
-     "Name": "ManualOperationEventMask",
-     "Id": 67
+     "Name": "AliroExpeditedTransactionSupportedProtocolVersions",
+     "Id": 131
     },
     {
-     "Name": "RFIDOperationEventMask",
-     "Id": 68
+     "Name": "AliroGroupResolvingKey",
+     "Id": 132
     },
     {
-     "Name": "KeypadProgrammingEventMask",
-     "Id": 69
+     "Name": "AliroSupportedBLEUWBProtocolVersions",
+     "Id": 133
     },
     {
-     "Name": "RemoteProgrammingEventMask",
-     "Id": 70
+     "Name": "AliroBLEAdvertisingVersion",
+     "Id": 134
     },
     {
-     "Name": "RFIDProgrammingEventMask",
-     "Id": 71
+     "Name": "NumberOfAliroCredentialIssuerKeysSupported",
+     "Id": 135
+    },
+    {
+     "Name": "NumberOfAliroEndpointKeysSupported",
+     "Id": 136
     }
    ]
   },
@@ -1512,16 +2945,8 @@
      "Id": 2
     },
     {
-     "Name": "GoToLiftValue",
-     "Id": 4
-    },
-    {
      "Name": "GoToLiftPercentage",
      "Id": 5
-    },
-    {
-     "Name": "GoToTiltValue",
-     "Id": 7
     },
     {
      "Name": "GoToTiltPercentage",
@@ -1532,22 +2957,6 @@
     {
      "Name": "Type",
      "Id": 0
-    },
-    {
-     "Name": "PhysicalClosedLimitLift",
-     "Id": 1
-    },
-    {
-     "Name": "PhysicalClosedLimitTilt",
-     "Id": 2
-    },
-    {
-     "Name": "CurrentPositionLift",
-     "Id": 3
-    },
-    {
-     "Name": "CurrentPositionTilt",
-     "Id": 4
     },
     {
      "Name": "NumberOfActuationsLift",
@@ -1594,48 +3003,170 @@
      "Id": 15
     },
     {
-     "Name": "InstalledOpenLimitLift",
-     "Id": 16
-    },
-    {
-     "Name": "InstalledClosedLimitLift",
-     "Id": 17
-    },
-    {
-     "Name": "InstalledOpenLimitTilt",
-     "Id": 18
-    },
-    {
-     "Name": "InstalledClosedLimitTilt",
-     "Id": 19
-    },
-    {
-     "Name": "VelocityLift",
-     "Id": 20
-    },
-    {
-     "Name": "AccelerationTimeLift",
-     "Id": 21
-    },
-    {
-     "Name": "DecelerationTimeLift",
-     "Id": 22
-    },
-    {
      "Name": "Mode",
      "Id": 23
     },
     {
-     "Name": "IntermediateSetpointsLift",
-     "Id": 24
-    },
-    {
-     "Name": "IntermediateSetpointsTilt",
-     "Id": 25
-    },
-    {
      "Name": "SafetyStatus",
      "Id": 26
+    }
+   ]
+  },
+  "260": {
+   "Name": "ClosureControl",
+   "Id": 260,
+   "Commands": [
+    {
+     "Name": "Stop",
+     "Id": 0
+    },
+    {
+     "Name": "MoveTo",
+     "Id": 1
+    },
+    {
+     "Name": "Calibrate",
+     "Id": 2
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CountdownTime",
+     "Id": 0
+    },
+    {
+     "Name": "MainState",
+     "Id": 1
+    },
+    {
+     "Name": "CurrentErrorList",
+     "Id": 2
+    },
+    {
+     "Name": "OverallCurrentState",
+     "Id": 3
+    },
+    {
+     "Name": "OverallTargetState",
+     "Id": 4
+    },
+    {
+     "Name": "LatchControlModes",
+     "Id": 5
+    }
+   ]
+  },
+  "261": {
+   "Name": "ClosureDimension",
+   "Id": 261,
+   "Commands": [
+    {
+     "Name": "SetTarget",
+     "Id": 0
+    },
+    {
+     "Name": "Step",
+     "Id": 1
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CurrentState",
+     "Id": 0
+    },
+    {
+     "Name": "TargetState",
+     "Id": 1
+    },
+    {
+     "Name": "Resolution",
+     "Id": 2
+    },
+    {
+     "Name": "StepValue",
+     "Id": 3
+    },
+    {
+     "Name": "Unit",
+     "Id": 4
+    },
+    {
+     "Name": "UnitRange",
+     "Id": 5
+    },
+    {
+     "Name": "LimitRange",
+     "Id": 6
+    },
+    {
+     "Name": "TranslationDirection",
+     "Id": 7
+    },
+    {
+     "Name": "RotationAxis",
+     "Id": 8
+    },
+    {
+     "Name": "Overflow",
+     "Id": 9
+    },
+    {
+     "Name": "ModulationType",
+     "Id": 10
+    },
+    {
+     "Name": "LatchControlModes",
+     "Id": 11
+    }
+   ]
+  },
+  "2822": {
+   "Name": "MeterIdentification",
+   "Id": 2822,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "MeterType",
+     "Id": 0
+    },
+    {
+     "Name": "PointOfDelivery",
+     "Id": 1
+    },
+    {
+     "Name": "MeterSerialNumber",
+     "Id": 2
+    },
+    {
+     "Name": "ProtocolVersion",
+     "Id": 3
+    },
+    {
+     "Name": "PowerThreshold",
+     "Id": 4
+    }
+   ]
+  },
+  "2823": {
+   "Name": "CommodityMetering",
+   "Id": 2823,
+   "Commands": null,
+   "Attributes": [
+    {
+     "Name": "MeteredQuantity",
+     "Id": 0
+    },
+    {
+     "Name": "MeteredQuantityTimestamp",
+     "Id": 1
+    },
+    {
+     "Name": "TariffUnit",
+     "Id": 2
+    },
+    {
+     "Name": "MaximumMeteredQuantities",
+     "Id": 3
     }
    ]
   },
@@ -1663,6 +3194,10 @@
     {
      "Name": "TagList",
      "Id": 4
+    },
+    {
+     "Name": "EndpointUniqueID",
+     "Id": 5
     }
    ]
   },
@@ -1673,14 +3208,6 @@
     {
      "Name": "Identify",
      "Id": 0
-    },
-    {
-     "Name": "IdentifyQueryResponse",
-     "Id": 0
-    },
-    {
-     "Name": "IdentifyQuery",
-     "Id": 1
     },
     {
      "Name": "TriggerEffect",
@@ -1712,7 +3239,16 @@
   "31": {
    "Name": "AccessControl",
    "Id": 31,
-   "Commands": null,
+   "Commands": [
+    {
+     "Name": "ReviewFabricRestrictions",
+     "Id": 0
+    },
+    {
+     "Name": "ReviewFabricRestrictionsResponse",
+     "Id": 1
+    }
+   ],
    "Attributes": [
     {
      "Name": "ACL",
@@ -1733,6 +3269,66 @@
     {
      "Name": "AccessControlEntriesPerFabric",
      "Id": 4
+    },
+    {
+     "Name": "CommissioningARL",
+     "Id": 5
+    },
+    {
+     "Name": "ARL",
+     "Id": 6
+    },
+    {
+     "Name": "AuxiliaryACL",
+     "Id": 7
+    }
+   ]
+  },
+  "336": {
+   "Name": "ServiceArea",
+   "Id": 336,
+   "Commands": [
+    {
+     "Name": "SelectAreas",
+     "Id": 0
+    },
+    {
+     "Name": "SelectAreasResponse",
+     "Id": 1
+    },
+    {
+     "Name": "SkipArea",
+     "Id": 2
+    },
+    {
+     "Name": "SkipAreaResponse",
+     "Id": 3
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "SupportedAreas",
+     "Id": 0
+    },
+    {
+     "Name": "SupportedMaps",
+     "Id": 1
+    },
+    {
+     "Name": "SelectedAreas",
+     "Id": 2
+    },
+    {
+     "Name": "CurrentArea",
+     "Id": 3
+    },
+    {
+     "Name": "EstimatedEndTime",
+     "Id": 4
+    },
+    {
+     "Name": "Progress",
+     "Id": 5
     }
    ]
   },
@@ -1952,6 +3548,65 @@
     {
      "Name": "MaxPathsPerInvoke",
      "Id": 22
+    },
+    {
+     "Name": "ConfigurationVersion",
+     "Id": 24
+    }
+   ]
+  },
+  "41": {
+   "Name": "OTASoftwareUpdateProvider",
+   "Id": 41,
+   "Commands": [
+    {
+     "Name": "QueryImage",
+     "Id": 0
+    },
+    {
+     "Name": "QueryImageResponse",
+     "Id": 1
+    },
+    {
+     "Name": "ApplyUpdateRequest",
+     "Id": 2
+    },
+    {
+     "Name": "ApplyUpdateResponse",
+     "Id": 3
+    },
+    {
+     "Name": "NotifyUpdateApplied",
+     "Id": 4
+    }
+   ],
+   "Attributes": null
+  },
+  "42": {
+   "Name": "OTASoftwareUpdateRequestor",
+   "Id": 42,
+   "Commands": [
+    {
+     "Name": "AnnounceOTAProvider",
+     "Id": 0
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "DefaultOTAProviders",
+     "Id": 0
+    },
+    {
+     "Name": "UpdatePossible",
+     "Id": 1
+    },
+    {
+     "Name": "UpdateState",
+     "Id": 2
+    },
+    {
+     "Name": "UpdateStateProgress",
+     "Id": 3
     }
    ]
   },
@@ -1997,6 +3652,10 @@
     {
      "Name": "TemperatureUnit",
      "Id": 0
+    },
+    {
+     "Name": "SupportedTemperatureUnits",
+     "Id": 1
     }
    ]
   },
@@ -2014,24 +3673,7 @@
   "47": {
    "Name": "PowerSource",
    "Id": 47,
-   "Commands": [
-    {
-     "Name": "DisableBattery",
-     "Id": 1
-    },
-    {
-     "Name": "EnableBatteryCharging",
-     "Id": 2
-    },
-    {
-     "Name": "EnableBatteryDischarging",
-     "Id": 3
-    },
-    {
-     "Name": "StartBatteryDiagnostics",
-     "Id": 4
-    }
-   ],
+   "Commands": null,
    "Attributes": [
     {
      "Name": "Status",
@@ -2160,57 +3802,46 @@
     {
      "Name": "EndpointList",
      "Id": 31
-    },
-    {
-     "Name": "BatAbsMaxChargeCurrent",
-     "Id": 32
-    },
-    {
-     "Name": "BatAbsMinChargeCurrent",
-     "Id": 33
-    },
-    {
-     "Name": "BatAbsMaxDischargeCurrent",
-     "Id": 34
-    },
-    {
-     "Name": "BatMaxChargeCurrent",
-     "Id": 35
-    },
-    {
-     "Name": "BatMinChargeCurrent",
-     "Id": 36
-    },
-    {
-     "Name": "BatMaxDischargeCurrent",
-     "Id": 37
-    },
-    {
-     "Name": "BatChargePermissions",
-     "Id": 38
-    },
-    {
-     "Name": "BatEnableChargeTime",
-     "Id": 39
-    },
-    {
-     "Name": "BatEnableDischargeTime",
-     "Id": 40
-    },
-    {
-     "Name": "WiredMaxAmperage",
-     "Id": 41
-    },
-    {
-     "Name": "WiredAbsMaxAmperage",
-     "Id": 42
     }
    ]
   },
   "48": {
    "Name": "GeneralCommissioning",
    "Id": 48,
-   "Commands": null,
+   "Commands": [
+    {
+     "Name": "ArmFailSafe",
+     "Id": 0
+    },
+    {
+     "Name": "ArmFailSafeResponse",
+     "Id": 1
+    },
+    {
+     "Name": "SetRegulatoryConfig",
+     "Id": 2
+    },
+    {
+     "Name": "SetRegulatoryConfigResponse",
+     "Id": 3
+    },
+    {
+     "Name": "CommissioningComplete",
+     "Id": 4
+    },
+    {
+     "Name": "CommissioningCompleteResponse",
+     "Id": 5
+    },
+    {
+     "Name": "SetTCAcknowledgements",
+     "Id": 6
+    },
+    {
+     "Name": "SetTCAcknowledgementsResponse",
+     "Id": 7
+    }
+   ],
    "Attributes": [
     {
      "Name": "Breadcrumb",
@@ -2231,6 +3862,38 @@
     {
      "Name": "SupportsConcurrentConnection",
      "Id": 4
+    },
+    {
+     "Name": "TCAcceptedVersion",
+     "Id": 5
+    },
+    {
+     "Name": "TCMinRequiredVersion",
+     "Id": 6
+    },
+    {
+     "Name": "TCAcknowledgements",
+     "Id": 7
+    },
+    {
+     "Name": "TCAcknowledgementsRequired",
+     "Id": 8
+    },
+    {
+     "Name": "TCUpdateDeadline",
+     "Id": 9
+    },
+    {
+     "Name": "RecoveryIdentifier",
+     "Id": 10
+    },
+    {
+     "Name": "NetworkRecoveryReason",
+     "Id": 11
+    },
+    {
+     "Name": "IsCommissioningWithoutPower",
+     "Id": 12
     }
    ]
   },
@@ -2273,6 +3936,14 @@
     {
      "Name": "ReorderNetwork",
      "Id": 8
+    },
+    {
+     "Name": "QueryIdentity",
+     "Id": 9
+    },
+    {
+     "Name": "QueryIdentityResponse",
+     "Id": 10
     }
    ],
    "Attributes": [
@@ -2322,122 +3993,6 @@
     }
    ]
   },
-  "5": {
-   "Name": "Scenes",
-   "Id": 5,
-   "Commands": [
-    {
-     "Name": "AddScene",
-     "Id": 0
-    },
-    {
-     "Name": "AddSceneResponse",
-     "Id": 0
-    },
-    {
-     "Name": "ViewScene",
-     "Id": 1
-    },
-    {
-     "Name": "ViewSceneResponse",
-     "Id": 1
-    },
-    {
-     "Name": "RemoveScene",
-     "Id": 2
-    },
-    {
-     "Name": "RemoveSceneResponse",
-     "Id": 2
-    },
-    {
-     "Name": "RemoveAllScenes",
-     "Id": 3
-    },
-    {
-     "Name": "RemoveAllScenesResponse",
-     "Id": 3
-    },
-    {
-     "Name": "StoreScene",
-     "Id": 4
-    },
-    {
-     "Name": "StoreSceneResponse",
-     "Id": 4
-    },
-    {
-     "Name": "RecallScene",
-     "Id": 5
-    },
-    {
-     "Name": "GetSceneMembership",
-     "Id": 6
-    },
-    {
-     "Name": "GetSceneMembershipResponse",
-     "Id": 6
-    },
-    {
-     "Name": "EnhancedAddScene",
-     "Id": 64
-    },
-    {
-     "Name": "EnhancedAddSceneResponse",
-     "Id": 64
-    },
-    {
-     "Name": "EnhancedViewScene",
-     "Id": 65
-    },
-    {
-     "Name": "EnhancedViewSceneResponse",
-     "Id": 65
-    },
-    {
-     "Name": "CopyScene",
-     "Id": 66
-    },
-    {
-     "Name": "CopySceneResponse",
-     "Id": 66
-    }
-   ],
-   "Attributes": [
-    {
-     "Name": "SceneCount",
-     "Id": 0
-    },
-    {
-     "Name": "CurrentScene",
-     "Id": 1
-    },
-    {
-     "Name": "CurrentGroup",
-     "Id": 2
-    },
-    {
-     "Name": "SceneValid",
-     "Id": 3
-    },
-    {
-     "Name": "NameSupport",
-     "Id": 4
-    },
-    {
-     "Name": "LastConfiguredBy",
-     "Id": 5
-    },
-    {
-     "Name": "SceneTableSize",
-     "Id": 6
-    },
-    {
-     "Name": "FabricSceneInfo",
-     "Id": 7
-    }
-   ]
-  },
   "50": {
    "Name": "DiagnosticLogs",
    "Id": 50,
@@ -2468,6 +4023,14 @@
     {
      "Name": "TimeSnapshotResponse",
      "Id": 2
+    },
+    {
+     "Name": "PayloadTestRequest",
+     "Id": 3
+    },
+    {
+     "Name": "PayloadTestResponse",
+     "Id": 4
     }
    ],
    "Attributes": [
@@ -2506,6 +4069,14 @@
     {
      "Name": "TestEventTriggersEnabled",
      "Id": 8
+    },
+    {
+     "Name": "DoNotUse",
+     "Id": 9
+    },
+    {
+     "Name": "DeviceLoadStatus",
+     "Id": 10
     }
    ]
   },
@@ -2513,7 +4084,104 @@
    "Name": "PumpConfigurationandControl",
    "Id": 512,
    "Commands": null,
-   "Attributes": null
+   "Attributes": [
+    {
+     "Name": "MaxPressure",
+     "Id": 0
+    },
+    {
+     "Name": "MaxSpeed",
+     "Id": 1
+    },
+    {
+     "Name": "MaxFlow",
+     "Id": 2
+    },
+    {
+     "Name": "MinConstPressure",
+     "Id": 3
+    },
+    {
+     "Name": "MaxConstPressure",
+     "Id": 4
+    },
+    {
+     "Name": "MinCompPressure",
+     "Id": 5
+    },
+    {
+     "Name": "MaxCompPressure",
+     "Id": 6
+    },
+    {
+     "Name": "MinConstSpeed",
+     "Id": 7
+    },
+    {
+     "Name": "MaxConstSpeed",
+     "Id": 8
+    },
+    {
+     "Name": "MinConstFlow",
+     "Id": 9
+    },
+    {
+     "Name": "MaxConstFlow",
+     "Id": 10
+    },
+    {
+     "Name": "MinConstTemp",
+     "Id": 11
+    },
+    {
+     "Name": "MaxConstTemp",
+     "Id": 12
+    },
+    {
+     "Name": "PumpStatus",
+     "Id": 16
+    },
+    {
+     "Name": "EffectiveOperationMode",
+     "Id": 17
+    },
+    {
+     "Name": "EffectiveControlMode",
+     "Id": 18
+    },
+    {
+     "Name": "Capacity",
+     "Id": 19
+    },
+    {
+     "Name": "Speed",
+     "Id": 20
+    },
+    {
+     "Name": "LifetimeRunningHours",
+     "Id": 21
+    },
+    {
+     "Name": "Power",
+     "Id": 22
+    },
+    {
+     "Name": "LifetimeEnergyConsumed",
+     "Id": 23
+    },
+    {
+     "Name": "OperationMode",
+     "Id": 32
+    },
+    {
+     "Name": "ControlMode",
+     "Id": 33
+    },
+    {
+     "Name": "AlarmMask",
+     "Id": 34
+    }
+   ]
   },
   "513": {
    "Name": "Thermostat",
@@ -2524,28 +4192,24 @@
      "Id": 0
     },
     {
-     "Name": "GetWeeklyScheduleResponse",
-     "Id": 0
-    },
-    {
-     "Name": "SetWeeklySchedule",
-     "Id": 1
-    },
-    {
-     "Name": "GetRelayStatusLogResponse",
-     "Id": 1
-    },
-    {
-     "Name": "GetWeeklySchedule",
+     "Name": "AddThermostatSuggestionResponse",
      "Id": 2
     },
     {
-     "Name": "ClearWeeklySchedule",
-     "Id": 3
+     "Name": "SetActiveScheduleRequest",
+     "Id": 5
     },
     {
-     "Name": "GetRelayStatusLog",
-     "Id": 4
+     "Name": "SetActivePresetRequest",
+     "Id": 6
+    },
+    {
+     "Name": "AddThermostatSuggestion",
+     "Id": 7
+    },
+    {
+     "Name": "RemoveThermostatSuggestion",
+     "Id": 8
     }
    ],
    "Attributes": [
@@ -2642,24 +4306,8 @@
      "Id": 28
     },
     {
-     "Name": "AlarmMask",
-     "Id": 29
-    },
-    {
      "Name": "ThermostatRunningMode",
      "Id": 30
-    },
-    {
-     "Name": "StartOfWeek",
-     "Id": 32
-    },
-    {
-     "Name": "NumberOfWeeklyTransitions",
-     "Id": 33
-    },
-    {
-     "Name": "NumberOfDailyTransitions",
-     "Id": 34
     },
     {
      "Name": "TemperatureSetpointHold",
@@ -2748,6 +4396,66 @@
     {
      "Name": "ACCapacityFormat",
      "Id": 71
+    },
+    {
+     "Name": "PresetTypes",
+     "Id": 72
+    },
+    {
+     "Name": "ScheduleTypes",
+     "Id": 73
+    },
+    {
+     "Name": "NumberOfPresets",
+     "Id": 74
+    },
+    {
+     "Name": "NumberOfSchedules",
+     "Id": 75
+    },
+    {
+     "Name": "NumberOfScheduleTransitions",
+     "Id": 76
+    },
+    {
+     "Name": "NumberOfScheduleTransitionPerDay",
+     "Id": 77
+    },
+    {
+     "Name": "ActivePresetHandle",
+     "Id": 78
+    },
+    {
+     "Name": "ActiveScheduleHandle",
+     "Id": 79
+    },
+    {
+     "Name": "Presets",
+     "Id": 80
+    },
+    {
+     "Name": "Schedules",
+     "Id": 81
+    },
+    {
+     "Name": "SetpointHoldExpiryTimestamp",
+     "Id": 82
+    },
+    {
+     "Name": "MaxThermostatSuggestions",
+     "Id": 83
+    },
+    {
+     "Name": "ThermostatSuggestions",
+     "Id": 84
+    },
+    {
+     "Name": "CurrentThermostatSuggestion",
+     "Id": 85
+    },
+    {
+     "Name": "ThermostatSuggestionNotFollowingReason",
+     "Id": 86
     }
    ]
   },
@@ -3117,8 +4825,16 @@
      "Id": 61
     },
     {
-     "Name": "ActiveNetworkFaults",
+     "Name": "ActiveNetworkFaultsList",
      "Id": 62
+    },
+    {
+     "Name": "ExtAddress",
+     "Id": 63
+    },
+    {
+     "Name": "Rloc16",
+     "Id": 64
     }
    ]
   },
@@ -3235,15 +4951,98 @@
    ]
   },
   "56": {
-   "Name": "TimeSync",
+   "Name": "TimeSynchronization",
    "Id": 56,
-   "Commands": null,
-   "Attributes": null
+   "Commands": [
+    {
+     "Name": "SetUTCTime",
+     "Id": 0
+    },
+    {
+     "Name": "SetTrustedTimeSource",
+     "Id": 1
+    },
+    {
+     "Name": "SetTimeZone",
+     "Id": 2
+    },
+    {
+     "Name": "SetTimeZoneResponse",
+     "Id": 3
+    },
+    {
+     "Name": "SetDSTOffset",
+     "Id": 4
+    },
+    {
+     "Name": "SetDefaultNTP",
+     "Id": 5
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "UTCTime",
+     "Id": 0
+    },
+    {
+     "Name": "Granularity",
+     "Id": 1
+    },
+    {
+     "Name": "TimeSource",
+     "Id": 2
+    },
+    {
+     "Name": "TrustedTimeSource",
+     "Id": 3
+    },
+    {
+     "Name": "DefaultNTP",
+     "Id": 4
+    },
+    {
+     "Name": "TimeZone",
+     "Id": 5
+    },
+    {
+     "Name": "DSTOffset",
+     "Id": 6
+    },
+    {
+     "Name": "LocalTime",
+     "Id": 7
+    },
+    {
+     "Name": "TimeZoneDatabase",
+     "Id": 8
+    },
+    {
+     "Name": "NTPServerAvailable",
+     "Id": 9
+    },
+    {
+     "Name": "TimeZoneListMaxSize",
+     "Id": 10
+    },
+    {
+     "Name": "DSTOffsetListMaxSize",
+     "Id": 11
+    },
+    {
+     "Name": "SupportsDNSResolve",
+     "Id": 12
+    }
+   ]
   },
   "57": {
    "Name": "BridgedDeviceBasicInformation",
    "Id": 57,
-   "Commands": null,
+   "Commands": [
+    {
+     "Name": "KeepActive",
+     "Id": 128
+    }
+   ],
    "Attributes": [
     {
      "Name": "DataModelRevision",
@@ -3336,6 +5135,10 @@
     {
      "Name": "MaxPathsPerInvoke",
      "Id": 22
+    },
+    {
+     "Name": "ConfigurationVersion",
+     "Id": 24
     }
    ]
   },
@@ -3493,6 +5296,18 @@
     {
      "Name": "AddTrustedRootCertificate",
      "Id": 11
+    },
+    {
+     "Name": "SetVIDVerificationStatement",
+     "Id": 12
+    },
+    {
+     "Name": "SignVIDVerificationRequest",
+     "Id": 13
+    },
+    {
+     "Name": "SignVIDVerificationResponse",
+     "Id": 14
     }
    ],
    "Attributes": [
@@ -3527,27 +5342,27 @@
    "Id": 63,
    "Commands": [
     {
-     "Name": "KeySetWriteCommand",
+     "Name": "KeySetWrite",
      "Id": 0
     },
     {
-     "Name": "KeySetReadCommand",
+     "Name": "KeySetRead",
      "Id": 1
     },
     {
-     "Name": "KeySetReadResponseCommand",
+     "Name": "KeySetReadResponse",
      "Id": 2
     },
     {
-     "Name": "KeySetRemoveCommand",
+     "Name": "KeySetRemove",
      "Id": 3
     },
     {
-     "Name": "KeySetReadAllIndicesCommand",
+     "Name": "KeySetReadAllIndices",
      "Id": 4
     },
     {
-     "Name": "KeySetReadAllIndicesResponseCommand",
+     "Name": "KeySetReadAllIndicesResponse",
      "Id": 5
     }
    ],
@@ -3567,6 +5382,10 @@
     {
      "Name": "MaxGroupKeysPerFabric",
      "Id": 3
+    },
+    {
+     "Name": "GroupcastAdoption",
+     "Id": 4
     }
    ]
   },
@@ -3603,53 +5422,123 @@
     }
    ]
   },
-  "71": {
-   "Name": "Timer",
-   "Id": 71,
+  "70": {
+   "Name": "ICDManagement",
+   "Id": 70,
    "Commands": [
     {
-     "Name": "SetTimer",
+     "Name": "RegisterClient",
      "Id": 0
     },
     {
-     "Name": "ResetTimer",
+     "Name": "RegisterClientResponse",
      "Id": 1
     },
     {
-     "Name": "AddTime",
+     "Name": "UnregisterClient",
      "Id": 2
     },
     {
-     "Name": "ReduceTime",
+     "Name": "StayActiveRequest",
      "Id": 3
+    },
+    {
+     "Name": "StayActiveResponse",
+     "Id": 4
     }
    ],
    "Attributes": [
     {
-     "Name": "SetTime",
+     "Name": "IdleModeDuration",
      "Id": 0
     },
     {
-     "Name": "TimeRemaining",
+     "Name": "ActiveModeDuration",
      "Id": 1
     },
     {
-     "Name": "TimerState",
+     "Name": "ActiveModeThreshold",
      "Id": 2
+    },
+    {
+     "Name": "RegisteredClients",
+     "Id": 3
+    },
+    {
+     "Name": "ICDCounter",
+     "Id": 4
+    },
+    {
+     "Name": "ClientsSupportedPerFabric",
+     "Id": 5
+    },
+    {
+     "Name": "UserActiveModeTriggerHint",
+     "Id": 6
+    },
+    {
+     "Name": "UserActiveModeTriggerInstruction",
+     "Id": 7
+    },
+    {
+     "Name": "OperatingMode",
+     "Id": 8
+    },
+    {
+     "Name": "MaximumCheckInBackoff",
+     "Id": 9
     }
    ]
   },
   "72": {
    "Name": "OvenCavityOperationalState",
    "Id": 72,
-   "Commands": null,
+   "Commands": [
+    {
+     "Name": "Pause",
+     "Id": 0
+    },
+    {
+     "Name": "Stop",
+     "Id": 1
+    },
+    {
+     "Name": "Start",
+     "Id": 2
+    },
+    {
+     "Name": "Resume",
+     "Id": 3
+    },
+    {
+     "Name": "OperationalCommandResponse",
+     "Id": 4
+    }
+   ],
    "Attributes": null
   },
   "73": {
    "Name": "OvenMode",
    "Id": 73,
    "Commands": null,
-   "Attributes": null
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
   },
   "74": {
    "Name": "LaundryDryerControls",
@@ -3958,77 +5847,6 @@
     }
    ]
   },
-  "769": {
-   "Name": "BallastConfiguration",
-   "Id": 769,
-   "Commands": null,
-   "Attributes": [
-    {
-     "Name": "PhysicalMinLevel",
-     "Id": 0
-    },
-    {
-     "Name": "PhysicalMaxLevel",
-     "Id": 1
-    },
-    {
-     "Name": "BallastStatus",
-     "Id": 2
-    },
-    {
-     "Name": "MinLevel",
-     "Id": 16
-    },
-    {
-     "Name": "MaxLevel",
-     "Id": 17
-    },
-    {
-     "Name": "PowerOnLevel",
-     "Id": 18
-    },
-    {
-     "Name": "PowerOnFadeTime",
-     "Id": 19
-    },
-    {
-     "Name": "IntrinsicBallastFactor",
-     "Id": 20
-    },
-    {
-     "Name": "BallastFactorAdjustment",
-     "Id": 21
-    },
-    {
-     "Name": "LampQuantity",
-     "Id": 32
-    },
-    {
-     "Name": "LampType",
-     "Id": 48
-    },
-    {
-     "Name": "LampManufacturer",
-     "Id": 49
-    },
-    {
-     "Name": "LampRatedHours",
-     "Id": 50
-    },
-    {
-     "Name": "LampBurnHours",
-     "Id": 51
-    },
-    {
-     "Name": "LampAlarmMode",
-     "Id": 52
-    },
-    {
-     "Name": "LampBurnHoursTripPoint",
-     "Id": 53
-    }
-   ]
-  },
   "8": {
    "Name": "LevelControl",
    "Id": 8,
@@ -4238,13 +6056,47 @@
    "Name": "RVCRunMode",
    "Id": 84,
    "Commands": null,
-   "Attributes": null
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
   },
   "85": {
    "Name": "RVCCleanMode",
    "Id": 85,
    "Commands": null,
-   "Attributes": null
+   "Attributes": [
+    {
+     "Name": "SupportedModes",
+     "Id": 0
+    },
+    {
+     "Name": "CurrentMode",
+     "Id": 1
+    },
+    {
+     "Name": "StartUpMode",
+     "Id": 2
+    },
+    {
+     "Name": "OnMode",
+     "Id": 3
+    }
+   ]
   },
   "86": {
    "Name": "TemperatureControl",
@@ -4255,7 +6107,32 @@
      "Id": 0
     }
    ],
-   "Attributes": null
+   "Attributes": [
+    {
+     "Name": "TemperatureSetpoint",
+     "Id": 0
+    },
+    {
+     "Name": "MinTemperature",
+     "Id": 1
+    },
+    {
+     "Name": "MaxTemperature",
+     "Id": 2
+    },
+    {
+     "Name": "Step",
+     "Id": 3
+    },
+    {
+     "Name": "SelectedTemperatureLevel",
+     "Id": 4
+    },
+    {
+     "Name": "SupportedTemperatureLevels",
+     "Id": 5
+    }
+   ]
   },
   "87": {
    "Name": "RefrigeratorAlarm",
@@ -4363,6 +6240,10 @@
     {
      "Name": "ExpiryDate",
      "Id": 12
+    },
+    {
+     "Name": "Unmounted",
+     "Id": 13
     }
    ]
   },
@@ -4401,6 +6282,58 @@
     {
      "Name": "OnMode",
      "Id": 3
+    }
+   ]
+  },
+  "95": {
+   "Name": "MicrowaveOvenControl",
+   "Id": 95,
+   "Commands": [
+    {
+     "Name": "SetCookingParameters",
+     "Id": 0
+    },
+    {
+     "Name": "AddMoreTime",
+     "Id": 1
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "CookTime",
+     "Id": 0
+    },
+    {
+     "Name": "MaxCookTime",
+     "Id": 1
+    },
+    {
+     "Name": "PowerSetting",
+     "Id": 2
+    },
+    {
+     "Name": "MinPower",
+     "Id": 3
+    },
+    {
+     "Name": "MaxPower",
+     "Id": 4
+    },
+    {
+     "Name": "PowerStep",
+     "Id": 5
+    },
+    {
+     "Name": "SupportedWatts",
+     "Id": 6
+    },
+    {
+     "Name": "SelectedWattIndex",
+     "Id": 7
+    },
+    {
+     "Name": "WattRating",
+     "Id": 8
     }
    ]
   },
@@ -4459,8 +6392,113 @@
   "97": {
    "Name": "RVCOperationalState",
    "Id": 97,
-   "Commands": null,
+   "Commands": [
+    {
+     "Name": "Pause",
+     "Id": 0
+    },
+    {
+     "Name": "Stop",
+     "Id": 1
+    },
+    {
+     "Name": "Start",
+     "Id": 2
+    },
+    {
+     "Name": "Resume",
+     "Id": 3
+    },
+    {
+     "Name": "OperationalCommandResponse",
+     "Id": 4
+    },
+    {
+     "Name": "GoHome",
+     "Id": 128
+    }
+   ],
    "Attributes": null
+  },
+  "98": {
+   "Name": "ScenesManagement",
+   "Id": 98,
+   "Commands": [
+    {
+     "Name": "AddScene",
+     "Id": 0
+    },
+    {
+     "Name": "AddSceneResponse",
+     "Id": 0
+    },
+    {
+     "Name": "ViewScene",
+     "Id": 1
+    },
+    {
+     "Name": "ViewSceneResponse",
+     "Id": 1
+    },
+    {
+     "Name": "RemoveScene",
+     "Id": 2
+    },
+    {
+     "Name": "RemoveSceneResponse",
+     "Id": 2
+    },
+    {
+     "Name": "RemoveAllScenes",
+     "Id": 3
+    },
+    {
+     "Name": "RemoveAllScenesResponse",
+     "Id": 3
+    },
+    {
+     "Name": "StoreScene",
+     "Id": 4
+    },
+    {
+     "Name": "StoreSceneResponse",
+     "Id": 4
+    },
+    {
+     "Name": "RecallScene",
+     "Id": 5
+    },
+    {
+     "Name": "GetSceneMembership",
+     "Id": 6
+    },
+    {
+     "Name": "GetSceneMembershipResponse",
+     "Id": 6
+    },
+    {
+     "Name": "CopyScene",
+     "Id": 64
+    },
+    {
+     "Name": "CopySceneResponse",
+     "Id": 64
+    }
+   ],
+   "Attributes": [
+    {
+     "Name": "DoNotUse",
+     "Id": 0
+    },
+    {
+     "Name": "SceneTableSize",
+     "Id": 1
+    },
+    {
+     "Name": "FabricSceneInfo",
+     "Id": 2
+    }
+   ]
   }
  }
 }
