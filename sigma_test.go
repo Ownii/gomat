@@ -9,7 +9,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/power2go-com-br/gomat/mattertlv"
+	"github.com/tom-code/gomat/mattertlv"
 )
 
 // TestPadAndConcatRS verifies that the ECDSA R||S concatenation is always

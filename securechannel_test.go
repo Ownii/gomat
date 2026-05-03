@@ -87,15 +87,16 @@ func TestReceiveBufferSize(t *testing.T) {
 }
 
 func TestReadTimeoutDefault(t *testing.T) {
-	// Verify that a new SecureChannel has the default 3-second timeout.
+	// A new SecureChannel has no timeout by default (0 = no deadline),
+	// because subscribing relies on long-lived reads.
 	sc, err := StartSecureChannel(net.ParseIP("127.0.0.1"), 15540, 0)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer sc.Close()
 
-	if sc.ReadTimeout != 3*time.Second {
-		t.Fatalf("expected default ReadTimeout of 3s, got %v", sc.ReadTimeout)
+	if sc.ReadTimeout != 0 {
+		t.Fatalf("expected default ReadTimeout of 0 (no timeout), got %v", sc.ReadTimeout)
 	}
 }
 

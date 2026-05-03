@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/power2go-com-br/gomat/mattertlv"
+	"github.com/tom-code/gomat/mattertlv"
 )
 
 // setupTestCertManager creates a FileCertManager with a bootstrapped CA in a temp directory.
