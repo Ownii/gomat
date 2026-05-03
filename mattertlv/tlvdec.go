@@ -207,19 +207,19 @@ func decode(buf *bytes.Buffer, container *TlvItem) {
 			current.Type = TypeInt
 			readTag(tagctrl, &current, buf)
 			var tmp uint16
-			binary.Read(buf, binary.LittleEndian, tmp)
+			binary.Read(buf, binary.LittleEndian, &tmp)
 			current.valueInt = uint64(tmp)
 		case 2:
 			current.Type = TypeInt
 			readTag(tagctrl, &current, buf)
 			var tmp uint32
-			binary.Read(buf, binary.LittleEndian, tmp)
+			binary.Read(buf, binary.LittleEndian, &tmp)
 			current.valueInt = uint64(tmp)
 		case 3:
 			current.Type = TypeInt
 			readTag(tagctrl, &current, buf)
 			var tmp uint64
-			binary.Read(buf, binary.LittleEndian, tmp)
+			binary.Read(buf, binary.LittleEndian, &tmp)
 			current.valueInt = uint64(tmp)
 		case 4:
 			current.Type = TypeInt
