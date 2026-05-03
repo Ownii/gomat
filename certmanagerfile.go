@@ -146,7 +146,8 @@ func (cm *FileCertManager) SignCertificate(user_pubkey *ecdsa.PublicKey, node_id
 		{
 			Id:       asn1.ObjectIdentifier{2, 5, 29, 19}, // basic constraints
 			Critical: true,
-			Value:    []byte{0x30, 0x03, 0x01, 0x01, 0xff},
+			// Empty SEQUENCE means cA is omitted (default FALSE), which is required for NOC.
+			Value:    []byte{0x30, 0x00},
 		},
 		{
 			Id:       asn1.ObjectIdentifier{2, 5, 29, 15}, // keyUsage
