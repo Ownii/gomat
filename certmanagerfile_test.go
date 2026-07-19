@@ -1,6 +1,7 @@
 package gomat
 
 import (
+	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -253,6 +254,69 @@ func TestMatterTLVSignatureIs64Bytes(t *testing.T) {
 			t.Fatalf("iteration %d: Matter TLV signature is %d bytes, want 64",
 				i, len(sigBytes))
 		}
+	}
+}
+
+// TestNOCSerialNumberIsDERIntegerContent verifies that the serial-num field
+// (context tag 1) in the Matter TLV holds the *DER INTEGER content octets* of
+// the certificate serial number, i.e. it includes a leading 0x00 sign byte
+// whenever the top bit of the first magnitude byte is set.
+//
+// The device reconstructs the TBSCertificate DER from the Matter TLV to verify
+// the CA signature, wrapping this octet string verbatim as an ASN.1 INTEGER
+// (both matter.js and connectedhomeip do this). Go signs over the real DER,
+// where a positive INTEGER whose MSB is set carries a leading 0x00. If gomat
+// stores only big.Int.Bytes() (sign byte stripped), the reconstructed INTEGER
+// differs from the signed one for ~50% of random serials, breaking signature
+// verification and surfacing as AddNOC status 3 (InvalidNOC).
+func TestNOCSerialNumberIsDERIntegerContent(t *testing.T) {
+	cm := setupTestCertManager(t)
+	fabric := &Fabric{CertificateManager: cm}
+
+	sawMSBSet := false
+	for i := 0; i < 200; i++ {
+		userKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			t.Fatalf("GenerateKey: %v", err)
+		}
+		noc, err := cm.SignCertificate(&userKey.PublicKey, uint64(1000+i))
+		if err != nil {
+			t.Fatalf("SignCertificate(%d): %v", i, err)
+		}
+
+		// Expected serial-num = DER INTEGER content octets of the serial.
+		// asn1.Marshal(bigInt) yields "02 <len> <content>"; strip the 2-byte
+		// header (len is single-byte since a serial is <= 17 bytes).
+		derInteger, err := asn1.Marshal(noc.SerialNumber)
+		if err != nil {
+			t.Fatalf("asn1.Marshal serial: %v", err)
+		}
+		want := derInteger[2:]
+
+		tlvBytes := SerializeCertificateIntoMatter(fabric, noc)
+		parsed, err := mattertlv.Decode(tlvBytes)
+		if err != nil {
+			t.Fatalf("TLV Decode: %v", err)
+		}
+		serialItem := parsed.GetItemRec([]int{1})
+		if serialItem == nil {
+			t.Fatal("Could not find serial-num field (tag 1) in Matter TLV")
+		}
+		got := serialItem.GetOctetString()
+
+		magnitude := noc.SerialNumber.Bytes()
+		if len(magnitude) > 0 && magnitude[0]&0x80 != 0 {
+			sawMSBSet = true
+		}
+
+		if !bytes.Equal(got, want) {
+			t.Fatalf("iteration %d: serial-num TLV = %x, want DER content %x (magnitude %x)",
+				i, got, want, magnitude)
+		}
+	}
+
+	if !sawMSBSet {
+		t.Skip("no MSB-set serial generated in 200 iterations (extremely unlikely) — test did not exercise the sign-byte path")
 	}
 }
 

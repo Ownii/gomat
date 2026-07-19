@@ -17,6 +17,23 @@ type dsaSignature struct {
 	R, S *big.Int
 }
 
+// derIntegerContent returns the DER content octets of a non-negative ASN.1
+// INTEGER: big-endian magnitude with a leading 0x00 byte prepended when the
+// high bit of the first byte would otherwise mark the value as negative. The
+// value zero is encoded as a single 0x00 byte. This matches the serial number
+// bytes that Go's crypto/x509 signs over, so a device reconstructing the TBS
+// DER from the Matter TLV recomputes an identical signature input.
+func derIntegerContent(i *big.Int) []byte {
+	b := i.Bytes()
+	if len(b) == 0 {
+		return []byte{0x00}
+	}
+	if b[0]&0x80 != 0 {
+		return append([]byte{0x00}, b...)
+	}
+	return b
+}
+
 func caConvertDNValue(in any) uint64 {
 	dn_str, ok := in.(string)
 	if !ok {
@@ -61,7 +78,14 @@ func SerializeCertificateIntoMatter(fabric *Fabric, in *x509.Certificate) []byte
 
 	var tlv mattertlv.TLVBuffer
 	tlv.WriteAnonStruct()
-	tlv.WriteOctetString(1, in.SerialNumber.Bytes()) // serial number
+	// The Matter serial-num field must carry the DER INTEGER *content octets*,
+	// which include a leading 0x00 sign byte when the top bit of the first
+	// magnitude byte is set. big.Int.Bytes() strips that sign byte, so for ~50%
+	// of random serials the device (which reconstructs the TBS DER by wrapping
+	// these bytes verbatim as an INTEGER) would compute a different TBS than the
+	// one Go signed, failing signature verification with AddNOC status 3
+	// (InvalidNOC).
+	tlv.WriteOctetString(1, derIntegerContent(in.SerialNumber)) // serial number
 	tlv.WriteUInt8(2, 1)                             // signature algorithm
 
 	tlv.WriteList(3) // issuer
