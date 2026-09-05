@@ -66,16 +66,15 @@ func NewFileCertManagerInDir(fabric uint64, dir string) *FileCertManager {
 // the job of the application, not of this library. This constructor is kept
 // so existing callers keep their current certificate directory.
 func NewFileCertManager(fabric uint64) *FileCertManager {
-	dir := defaultPemDir
-	// LookupEnv, not Getenv: a set-but-empty PEM_DIR must keep selecting the
-	// empty directory name, exactly as the old package-level init() did.
+	cm := NewFileCertManagerInDir(fabric, defaultPemDir)
+	// LookupEnv, not Getenv, and assigned after construction: a set-but-empty
+	// PEM_DIR must keep selecting the empty directory name, exactly as the old
+	// package-level init() did. Routing it through the constructor would map
+	// it back to the default.
 	if envDir, ok := os.LookupEnv("PEM_DIR"); ok {
-		dir = envDir
+		cm.dir = envDir
 	}
-	return &FileCertManager{
-		fabric: fabric,
-		dir:    dir,
-	}
+	return cm
 }
 func (cm *FileCertManager) GetCaPublicKey() ecdsa.PublicKey {
 	return cm.ca_private_key.PublicKey
